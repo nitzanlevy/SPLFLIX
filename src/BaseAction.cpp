@@ -20,12 +20,12 @@ void BaseAction::error(const std::string &errorMsg) {
 }
 
 std::string BaseAction::getErrorMsg() const {
-
+    return errorMsg;
 }
  ActionStatus BaseAction::getStatus() const {
-
+     return status;
 }
 
 std::string BaseAction::toString() const {
-
+    std::cout << status +" "+errorMsg;
 }
