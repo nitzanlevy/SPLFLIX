@@ -13,7 +13,11 @@ std::string User::getName() const {
     return name;
 }
 
-Watchable* User::getRecommendation(Session &s) {
-
+Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
+    int avgLength(0);
+    int historyLength=this->get_history().size();
+    for(int i=0;i<historyLength;i++)
+        avgLength=avgLength+this->get_history().;
+    avgLength=avgLength/historyLength;
 }
 
