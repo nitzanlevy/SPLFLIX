@@ -11,8 +11,8 @@ int main(int argc, char** argv){
     /*vector<std::string> v1=*new vector<string>();
     string name="nitzan";
     Watchable *watch= new Movie(1,name,3,v1);
-    cout << watch->getLength();
-    */
+    cout << watch->getLength() << endl;
+    cout <<watch->toString();*/
     //Session s(argv[1]);
     //s.start();
     return 0;
