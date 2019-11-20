@@ -13,7 +13,7 @@ public:
     virtual ~Watchable();
     virtual std::string toString() const = 0;
     virtual Watchable* getNextWatchable(Session&) const = 0;
-    virtual int getLength() const;
+    virtual int getLength() const; // added to use recommendation algorithms
 private:
     const long id;
     int length;

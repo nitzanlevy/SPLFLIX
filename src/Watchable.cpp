@@ -2,10 +2,9 @@
 // Created by amit on 18/11/2019.
 //
 #include "../include/Watchable.h"
+#include "../include/User.h"
+
 //Watchable methods
-Watchable* Watchable ::getNextWatchable(Session & session) const {
-    return nullptr;
-}
 Watchable ::Watchable(long id, int length, const std::vector<std::string> &tags):id(id),length(length),tags(tags) {}//check on tags
 
 Watchable::~Watchable() {
@@ -34,7 +33,7 @@ Movie::Movie(long id, const std::string &name, int length, const std::vector<std
 Movie::~Movie() {}
 
 Watchable* Movie::getNextWatchable(Session & session) const {
-    return nullptr ;
+    //return session.getUser().getRecommendation(session);
 }
 
 

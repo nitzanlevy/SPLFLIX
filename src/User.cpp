@@ -14,12 +14,15 @@ std::string User::getName() const {
 }
 
 Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
-    int avgLength(0);
-    int historyLength=this->get_history().size();
+    int avgLength(0); //average watch time
+    int historyLength=this->get_history().size(); //num of content the user watched
     for(int i=0;i<historyLength;i++) {
-        Watchable& watch = *(this->history.at(i));
-        avgLength = avgLength + watch.getLength();
+        Watchable *watchable=this->get_history()[i];
+        //avgLength=avgLength+watchable->getLength();
+
     }
-    avgLength=avgLength/historyLength;
+    //avgLength=avgLength/historyLength;
 }
+
+
 

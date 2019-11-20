@@ -6,6 +6,7 @@ using namespace std;
 int main(int argc, char** argv){
     if(argc!=2) {
         cout << "usage splflix input_file" << endl;
+        Session *session=new Session("/home/amit/Desktop/SPLFLIX/config1.json");
         return 0;
     }
     /*vector<std::string> v1=*new vector<string>();
