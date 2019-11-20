@@ -14,6 +14,7 @@ public:
     virtual std::string toString() const = 0;
     virtual Watchable* getNextWatchable(Session&) const = 0;
     virtual int getLength() const; // added to use recommendation algorithms
+    int getId();//added
 private:
     const long id;
     int length;
@@ -37,12 +38,14 @@ public:
     virtual ~Episode();
     virtual std::string toString() const;
     virtual Watchable* getNextWatchable(Session&) const;
-
+    std::string getName(); //added
 private:
     std::string seriesName;
     int season;
     int episode;
     long nextEpisodeId;
+    Watchable* getNextEpisode(Session&); //added
+
 };
 
 #endif

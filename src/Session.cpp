@@ -49,3 +49,15 @@ Session::~Session() {
 User& Session::getUser() {
     return *activeUser;
 }
+
+std::vector<Watchable *> Session::getContent() {
+    return content;
+}
+
+Watchable* Session::getWatchable(int watchId) {
+    for(auto & i : this->content) {
+        if (i->getId() == watchId)
+            return i;
+    }
+    return nullptr;
+}

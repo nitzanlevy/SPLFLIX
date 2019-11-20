@@ -3,7 +3,7 @@
 //
 #include "../include/Watchable.h"
 #include "../include/User.h"
-
+#include "../include/Session.h"
 //Watchable methods
 Watchable ::Watchable(long id, int length, const std::vector<std::string> &tags):id(id),length(length),tags(tags) {}//check on tags
 
@@ -19,6 +19,10 @@ std::string Watchable::toString() const {
     }
     return s;
 }
+
+int Watchable::getId() {
+    return id;
+}
 //end of watchable methods
 
 //start Movie methods
@@ -28,8 +32,7 @@ Movie::Movie(long id, const std::string &name, int length, const std::vector<std
 Movie::~Movie() {}
 
 Watchable* Movie::getNextWatchable(Session & session) const {
-    //if last seen=episode, return next, else: In episode
-    //return session.getUser().getRecommendation(session);
+    return session.getUser().getRecommendation(session);
 }
 
 
@@ -47,12 +50,31 @@ Episode::Episode(long id, const std::string &seriesName, int length, int season,
 Episode::~Episode(){}
 
 Watchable* Episode::getNextWatchable(Session & session) const {
-    return nullptr ;
-}
+    int length=session.getUser().get_history().size();
+    return dynamic_cast<Episode*>(session.getUser().get_history()[length-1])->getNextEpisode(session);
+} //need to check last episode
 
 std::string Episode::toString() const {
     return Watchable::toString()  ;
 }
+
+Watchable* Episode::getNextEpisode(Session &session) {
+    long id =this->getId()+1;
+    for(auto & x:session.getContent()) {
+        if (x->getId() == id)
+            return x;
+    }
+    return nullptr;
+}
+
+std::string Episode::getName() {
+    return seriesName;
+}
+
+
+
+
+
 //end episode methods
 
 
