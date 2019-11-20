@@ -2,6 +2,7 @@
 // Created by amit on 18/11/2019.
 //
 #include "../include/Action.h"
+#include "../include/User.h"
 
 BaseAction::BaseAction() {
 
@@ -28,4 +29,13 @@ std::string BaseAction::getErrorMsg() const {
 
 std::string BaseAction::toString() const {
     std::cout << status +" "+errorMsg;
+}
+
+BaseAction::~BaseAction() {
+
+}
+
+//Create User
+void CreateUser::act(Session &sess) {
+
 }

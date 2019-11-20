@@ -4,6 +4,7 @@
 #include "../include/Session.h"
 #include "../include/json.hpp"
 #include "../include/Watchable.h"
+#include "../include/User.h"
 #include <fstream>
 
 Session::Session(const std::string &configFilePath){
@@ -38,7 +39,12 @@ void Session::start() {
 }
 
 Session::~Session() {
-
+    for(auto & i : this->content)
+        delete i;
+    for (auto & i : this->actionsLog)
+        delete i;
+    for(auto & x:this->userMap)
+        delete x.second;
 }
 User& Session::getUser() {
     return *activeUser;

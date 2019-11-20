@@ -13,6 +13,7 @@ enum ActionStatus{
 
 class BaseAction{
 public:
+    virtual ~BaseAction();
     BaseAction();
     ActionStatus getStatus() const;
     virtual void act(Session& sess)=0;

@@ -7,12 +7,7 @@
 //Watchable methods
 Watchable ::Watchable(long id, int length, const std::vector<std::string> &tags):id(id),length(length),tags(tags) {}//check on tags
 
-Watchable::~Watchable() {
-    if(&tags) {
-        tags.clear();
-        delete &tags;
-    }
-}
+Watchable::~Watchable() {}
 
 int Watchable::getLength() const { return this->length;}
 
@@ -33,6 +28,7 @@ Movie::Movie(long id, const std::string &name, int length, const std::vector<std
 Movie::~Movie() {}
 
 Watchable* Movie::getNextWatchable(Session & session) const {
+    //if last seen=episode, return next, else: In episode
     //return session.getUser().getRecommendation(session);
 }
 
