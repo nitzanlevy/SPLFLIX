@@ -85,4 +85,21 @@ std::string ChangeActiveUser::toString() const {
 }
 //end Change User
 
+//Delete User
+void DeleteUser::act(Session &sess) {
+    sess.addAction(this);
+    string action=sess.getAction();
+    if (sess.getUser(action)){
+        sess.deleteUser(action);
+        setStatus(COMPLETED);
+    } else{
+        error("User not exists");
+    }
+}
+
+std::string DeleteUser::toString() const {
+
+}
+//End Delete User
+
 

@@ -80,3 +80,12 @@ User *Session::getUser(const string& userName) {
 void Session::setNewActiveUser(User * user) {
     activeUser=user;
 }
+
+void Session::deleteUser(const string& userName) {
+    for(auto & i : this->userMap) {
+        if (i.second->getName() == userName) {
+            delete i.second; //delete the user
+            userMap.erase(userMap.find(i.first));
+        }
+    }
+}
