@@ -46,8 +46,10 @@ Session::~Session() {
     for(auto & x:this->userMap)
         delete x.second;
 }
-User& Session::getActiveUser() {
-    return *activeUser;
+
+User * Session::getActiveUser() {
+    return activeUser;
+
 }
 
 std::vector<Watchable *> &Session::getContent() {
