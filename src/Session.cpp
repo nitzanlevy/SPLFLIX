@@ -60,3 +60,32 @@ Watchable* Session::getWatchable(int watchId) {
     }
     return nullptr;
 }
+
+string Session::getAction() {
+    return action;
+}
+
+void Session::addAction(BaseAction * baseAction) {
+    this->actionsLog.push_back(baseAction);
+}
+
+User *Session::getUser(const string& userName) {
+    for(auto & i : this->userMap) {
+        if (i.second->getName() == userName)
+            return i.second;
+    }
+    return nullptr;
+}
+
+void Session::setNewActiveUser(User * user) {
+    activeUser=user;
+}
+
+void Session::deleteUser(const string& userName) {
+    for(auto & i : this->userMap) {
+        if (i.second->getName() == userName) {
+            delete i.second; //delete the user
+            userMap.erase(userMap.find(i.first));
+        }
+    }
+}
