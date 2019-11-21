@@ -3,7 +3,9 @@
 
 #include <string>
 #include <iostream>
-using  std::string;
+
+using std::string;
+
 class Session;
 
 enum ActionStatus{

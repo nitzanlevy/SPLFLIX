@@ -50,8 +50,8 @@ Episode::Episode(long id, const std::string &seriesName, int length, int season,
 Episode::~Episode(){}
 
 Watchable* Episode::getNextWatchable(Session & session) const {
-    int length=session.getUser().get_history().size();
-    return dynamic_cast<Episode*>(session.getUser().get_history()[length-1])->getNextEpisode(session);
+    int length=session.getUser().getHistorySize();
+    return dynamic_cast<Episode*>(session.getUser().getWatchableAt(length-1))->getNextEpisode(session);
 } //need to check last episode
 
 std::string Episode::toString() const {
