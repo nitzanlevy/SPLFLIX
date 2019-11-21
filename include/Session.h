@@ -17,10 +17,15 @@ public:
     User& getUser(); //added to get recommendation
     std::vector<Watchable*> getContent();// added
     Watchable * getWatchable(int watchId);// added
+    string getAction();//added
+    void addAction(BaseAction*);//added
+    User* getUser(const string& userName);
+    void setNewActiveUser(User*);
 private:
     std::vector<Watchable*> content;
     std::vector<BaseAction*> actionsLog;
     std::unordered_map<std::string,User*> userMap;
     User* activeUser;
+    string action; //added
 };
 #endif

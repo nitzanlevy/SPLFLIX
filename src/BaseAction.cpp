@@ -5,13 +5,11 @@
 #include "../include/User.h"
 #include "../include/Session.h"
 #include "../include/Watchable.h"
+using std::string;
 
 BaseAction::BaseAction() {
-
-}
-
-void BaseAction::act(Session &sess) {
-
+    status=PENDING;
+    errorMsg="";
 }
 
 void BaseAction ::complete() {
@@ -19,7 +17,8 @@ void BaseAction ::complete() {
 }
 
 void BaseAction::error(const std::string &errorMsg) {
-
+    status=ERROR;
+    this->errorMsg=errorMsg;
 }
 
 std::string BaseAction::getErrorMsg() const {
@@ -29,12 +28,12 @@ std::string BaseAction::getErrorMsg() const {
      return status;
 }
 
-std::string BaseAction::toString() const {
-    std::cout << status +" "+errorMsg;
-}
-
 BaseAction::~BaseAction() {
 
+}
+
+void BaseAction::setStatus(ActionStatus actionStatus) {
+    this->status=actionStatus;
 }
 
 //Watch
@@ -68,3 +67,22 @@ void Watch::act(Session &sess) {
 std::string Watch::toString() const {
     return "Watching: ";
 }
+
+//Change User
+void ChangeActiveUser::act(Session &sess) {
+    sess.addAction(this); //push the action with pending status
+    string action=sess.getAction(); //the User name to switch to.
+    if (sess.getUser(action)){
+        sess.setNewActiveUser(sess.getUser(action));
+        setStatus(COMPLETED);
+    } else{
+        error("User not exists");
+    }
+}
+
+std::string ChangeActiveUser::toString() const {
+
+}
+//end Change User
+
+
