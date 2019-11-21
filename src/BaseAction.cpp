@@ -102,6 +102,20 @@ std::string DeleteUser::toString() const {
 }
 //End Delete User
 
-//
+//Duplicate User
+void DuplicateUser::act(Session &sess) {
+    sess.addAction(this);
+    string action=sess.getAction();
+    if (sess.getUser(action)){
+        setStatus(COMPLETED);
+    } else{
+        error("User not exists");
+    }
+
+}
+std::string DuplicateUser::toString() const {
+
+}
+//end Duplicate user
 
 
