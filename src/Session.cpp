@@ -6,6 +6,7 @@
 #include "../include/Watchable.h"
 #include "../include/User.h"
 #include <fstream>
+using std::string;
 
 Session::Session(const std::string &configFilePath){
     using json = nlohmann::json ;
@@ -59,4 +60,12 @@ Watchable* Session::getWatchable(int watchId) {
             return i;
     }
     return nullptr;
+}
+
+string Session::getAction() {
+    return action;
+}
+
+void Session::addUser(string name, User* user) {
+    this->userMap.insert({name,user});
 }

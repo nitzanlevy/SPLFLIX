@@ -37,6 +37,61 @@ BaseAction::~BaseAction() {
 
 }
 
+void BaseAction::setStatus(ActionStatus actionStatus){
+    this->status=actionStatus;
+}
+//function to check if string include only characters
+bool BaseAction::isValid(string check) {
+    bool verify = true;
+    for (int i = 0; i < check.length(); i++)
+    {
+        if (check[i] >= 'a' && check[i] <= 'z' || check[i] >= 'A' && check[i] <= 'Z')
+            verify = true;
+        else
+        {
+            verify = false;
+            break;
+        }
+    }
+    return verify;
+}
+
+//CreateUser
+void CreateUser::act(Session &sess) {
+    //need to add function that push act to the actVector
+    string action=sess.getAction();
+    if(action.find(" ")!=-1)
+    {
+        string name = action.substr(0, action.find(" "));
+        string code = action.substr(action.find(" ") + 1, action.length());
+        if(isValid(name) && code.size()==3) {
+            if (code == "len") {
+                sess.addUser(name, new LengthRecommenderUser(name));
+                this->setStatus(COMPLETED);
+            }
+            else if (code == "rer") {
+                sess.addUser(name, new RerunRecommenderUser(name));
+                this->setStatus(COMPLETED);
+            }
+            else if (code == "gen") {
+                sess.addUser(name, new GenreRecommenderUser(name));
+                this->setStatus(COMPLETED);
+            }
+            else
+                this->error("code is invalid");
+        }
+        else
+            this->error("name or code is missing");
+    }
+    else
+        this->error("name or code is missing");
+
+}
+
+std::string CreateUser::toString() const {
+    return " ";
+}
+
 //Watch
 void Watch::act(Session &sess) {
     //watch - now recommend
