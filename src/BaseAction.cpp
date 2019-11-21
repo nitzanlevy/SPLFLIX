@@ -90,8 +90,8 @@ std::string CreateUser::toString() const {
 //Watch
 void Watch::act(Session &sess) {
     //watch - now recommend
-    int length = sess.getUser().getHistorySize();
-    Watchable *watchable=sess.getUser().getWatchableAt(length-1);
+    int length = sess.getUser()->getHistorySize();
+    Watchable *watchable=sess.getUser()->getWatchableAt(length-1);
     Movie *m= dynamic_cast<Movie*>(watchable);
     Episode *e=dynamic_cast<Episode*>(watchable);
 
@@ -101,11 +101,11 @@ void Watch::act(Session &sess) {
         if (episode && e->getName()== episode->getName())
             watchable=e;
         else
-            watchable=sess.getUser().getRecommendation(sess);
+            watchable=sess.getUser()->getRecommendation(sess);
         delete episode;
     }
     else
-        watchable=sess.getUser().getRecommendation(sess);
+        watchable=sess.getUser()->getRecommendation(sess);
 
     std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
     delete watchable;
@@ -158,6 +158,8 @@ void DuplicateUser::act(Session &sess) {
     sess.addAction(this);
     string action=sess.getAction();
     if (sess.getUser(action)){
+        //learn how to know user type
+        User* user=sess.getUser();
         setStatus(COMPLETED);
     } else{
         error("User not exists");
