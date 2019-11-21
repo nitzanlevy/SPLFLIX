@@ -46,7 +46,7 @@ Session::~Session() {
     for(auto & x:this->userMap)
         delete x.second;
 }
-User * Session::getUser() {
+User * Session::getActiveUser() {
     return activeUser;
 }
 

@@ -15,7 +15,7 @@ public:
     Session(const std::string &configFilePath);
     ~Session();
     void start();
-    User * getUser(); //added to get recommendation
+    User * getActiveUser(); //added to get recommendation
     std::vector<Watchable*> getContent();// added
     Watchable * getWatchable(int watchId);// added
     void addUser(string,User*);//added

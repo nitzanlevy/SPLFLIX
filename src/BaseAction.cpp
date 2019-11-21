@@ -90,8 +90,8 @@ std::string CreateUser::toString() const {
 //Watch
 void Watch::act(Session &sess) {
     //watch - now recommend
-    int length = sess.getUser()->getHistorySize();
-    Watchable *watchable=sess.getUser()->getWatchableAt(length-1);
+    int length = sess.getActiveUser()->getHistorySize();
+    Watchable *watchable=sess.getActiveUser()->getWatchableAt(length-1);
     Movie *m= dynamic_cast<Movie*>(watchable);
     Episode *e=dynamic_cast<Episode*>(watchable);
 
@@ -101,11 +101,11 @@ void Watch::act(Session &sess) {
         if (episode && e->getName()== episode->getName())
             watchable=e;
         else
-            watchable=sess.getUser()->getRecommendation(sess);
+            watchable=sess.getActiveUser()->getRecommendation(sess);
         delete episode;
     }
     else
-        watchable=sess.getUser()->getRecommendation(sess);
+        watchable=sess.getActiveUser()->getRecommendation(sess);
 
     std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
     delete watchable;
@@ -156,14 +156,40 @@ std::string DeleteUser::toString() const {
 //Duplicate User
 void DuplicateUser::act(Session &sess) {
     sess.addAction(this);
-    string action=sess.getAction();
-    if (sess.getUser(action)){
-        //learn how to know user type
-        User* user=sess.getUser();
-        setStatus(COMPLETED);
-    } else{
-        error("User not exists");
-    }
+    string action=sess.getAction();//get the new name from action!!!
+    if(action.find(" ")!=-1) {
+        string existingUser = action.substr(0, action.find(" "));
+        string newOne = action.substr(action.find(" ") + 1, action.length());
+
+        if (sess.getUser(existingUser)) {
+            //learn how to know user type
+            LengthRecommenderUser *user = dynamic_cast<LengthRecommenderUser *>(sess.getUser(existingUser));
+            RerunRecommenderUser *user2 = dynamic_cast<RerunRecommenderUser *>(sess.getUser(existingUser));
+            GenreRecommenderUser *user3 = dynamic_cast<GenreRecommenderUser *>(sess.getUser(existingUser));
+            //use instanceOf
+            if (user) {
+                LengthRecommenderUser *newUser= new LengthRecommenderUser(newOne);
+                newUser->operator=(*(dynamic_cast<LengthRecommenderUser*>(sess.getUser(existingUser))));
+                sess.addUser(newOne,newUser);
+            }
+            if (user2) {
+                RerunRecommenderUser *newUser = new RerunRecommenderUser(newOne);
+                newUser->operator=(*(dynamic_cast<RerunRecommenderUser*>(sess.getUser(existingUser))));
+                sess.addUser(newOne,newUser);
+            }
+            if (user3) {
+                GenreRecommenderUser *newUser = new GenreRecommenderUser(newOne);
+                newUser->operator=(*(dynamic_cast<GenreRecommenderUser*>(sess.getUser(existingUser))));
+                sess.addUser(newOne,newUser);
+            }
+            delete user; //CareFull!
+            delete user2;
+            delete user3;
+            setStatus(COMPLETED);
+        } else {
+            error("User not exists");
+        }
+    } else error("unvalid Input");
 
 }
 std::string DuplicateUser::toString() const {
