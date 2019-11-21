@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+
 using std::string;
 
 class Session;
@@ -24,6 +25,7 @@ protected:
     void complete();
     void error(const std::string& errorMsg);
     std::string getErrorMsg() const;
+    bool isValid(string str);//added
 private:
     std::string errorMsg;
     ActionStatus status;

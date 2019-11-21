@@ -7,6 +7,7 @@
 /*std::vector<Watchable*> User::get_history() const {
     return this->history;
 }*/
+
 User::User(const std::string &name) : name(name) {
 
 }
@@ -46,6 +47,8 @@ int User::getHistorySize() {
 Watchable *User::getWatchableAt(int index) {
     return history.at(index);
 }
+//LengthRecommenderUser functions
+LengthRecommenderUser::LengthRecommenderUser(const std::string &name) : User(name) {}
 
 
 Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
@@ -57,6 +60,16 @@ Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
     }
     avgLength=avgLength/historyLength;
 }
+
+//RerunRecommenderUser functions
+RerunRecommenderUser::RerunRecommenderUser(const std::string &name): User(name) {}
+
+Watchable* RerunRecommenderUser::getRecommendation(Session &s) {}
+
+//GenreRecommenderUser functions
+GenreRecommenderUser::GenreRecommenderUser(const std::string &name): User(name) {}
+Watchable* GenreRecommenderUser::getRecommendation(Session &s) {}
+
 
 
 

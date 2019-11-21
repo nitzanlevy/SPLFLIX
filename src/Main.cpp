@@ -6,9 +6,10 @@ using namespace std;
 int main(int argc, char** argv){
     if(argc!=2) {
         cout << "usage splflix input_file" << endl;
-        //Session *session=new Session("/home/nitzan/Desktop/SPLFLIX/config1.json");
         return 0;
+
     }
+    //Session *session=new Session("/home/nitzan/Desktop/SPLFLIX/config1.json");
     /*vector<std::string> v1=*new vector<string>();
     string name="nitzan";
     Watchable *watch= new Movie(1,name,3,v1);
@@ -16,5 +17,4 @@ int main(int argc, char** argv){
     cout <<watch->toString();*/
     //Session s(argv[1]);
     //s.start();
-    return 0;
 }

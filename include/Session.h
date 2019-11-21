@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include "Action.h"
+using std::string;
 
 class User;
 class Watchable;
@@ -17,6 +18,7 @@ public:
     User& getUser(); //added to get recommendation
     std::vector<Watchable*> getContent();// added
     Watchable * getWatchable(int watchId);// added
+    void addUser(string,User*);//added
     string getAction();//added
     void addAction(BaseAction*);//added
     User* getUser(const string& userName);
