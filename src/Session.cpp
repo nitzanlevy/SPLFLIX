@@ -66,6 +66,7 @@ string Session::getAction() {
     return action;
 }
 
+//add user to the userMap
 void Session::addUser(string name, User* user) {
     this->userMap.insert({name,user});
 }
