@@ -32,7 +32,7 @@ Movie::Movie(long id, const std::string &name, int length, const std::vector<std
 Movie::~Movie() {}
 
 Watchable* Movie::getNextWatchable(Session & session) const {
-    return session.getUser().getRecommendation(session);
+    return session.getActiveUser().getRecommendation(session);
 }
 
 
@@ -50,8 +50,8 @@ Episode::Episode(long id, const std::string &seriesName, int length, int season,
 Episode::~Episode(){}
 
 Watchable* Episode::getNextWatchable(Session & session) const {
-    int length=session.getUser().getHistorySize();
-    return dynamic_cast<Episode*>(session.getUser().getWatchableAt(length-1))->getNextEpisode(session);
+    int length=session.getActiveUser().getHistorySize();
+    return dynamic_cast<Episode*>(session.getActiveUser().getWatchableAt(length-1))->getNextEpisode(session);
 } //need to check last episode
 
 std::string Episode::toString() const {
