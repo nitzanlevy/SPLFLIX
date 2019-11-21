@@ -49,7 +49,7 @@ bool BaseAction::isValid(string check) {
         }
     }
     return verify;
-}=======
+}
 
 //CreateUser
 void CreateUser::act(Session &sess) {
