@@ -39,8 +39,8 @@ void BaseAction::setStatus(ActionStatus actionStatus) {
 //Watch
 void Watch::act(Session &sess) {
     //watch - now recommend
-    int length = sess.getUser().get_history().size();
-    Watchable *watchable=sess.getUser().get_history()[length-1];
+    int length = sess.getUser().getHistorySize();
+    Watchable *watchable=sess.getUser().getWatchableAt(length-1);
     Movie *m= dynamic_cast<Movie*>(watchable);
     Episode *e=dynamic_cast<Episode*>(watchable);
 
@@ -101,5 +101,7 @@ std::string DeleteUser::toString() const {
 
 }
 //End Delete User
+
+//
 
 

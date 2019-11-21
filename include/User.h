@@ -8,13 +8,17 @@
 class Watchable;
 class Session;
 
-class User{
+class User{ //should implement rule of five
 public:
-    User(const std::string& name);
-    virtual ~User();
+    User(const std::string& name); //constructor
+    virtual ~User(); //destructor
+    User(const User &); //Copy constructor
+    User&operator=(const User&); //Copy assignment operator
     virtual Watchable* getRecommendation(Session& s) = 0;
     std::string getName() const;
-    std::vector<Watchable*> get_history() const;
+    //std::vector<Watchable*> get_history() const;
+    Watchable* getWatchableAt(int index); //added
+    int getHistorySize(); //added
 protected:
     std::vector<Watchable*> history;
 private:
