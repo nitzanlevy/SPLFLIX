@@ -1,6 +1,6 @@
 #include "../include/User.h"
 #include "../include/Watchable.h"
-
+#include "../include/Session.h"
 //
 // Created by amit on 18/11/2019.
 //
@@ -52,13 +52,32 @@ LengthRecommenderUser::LengthRecommenderUser(const std::string &name) : User(nam
 
 
 Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
-    int avgLength(0); //average watch time
-    int historyLength=this->history.size(); //num of content the user watched
-    for(int i=0;i<historyLength;i++) {
-        Watchable *watchable=this->history[i];
-        avgLength=avgLength+watchable->getLength();
+    if(s.contentSize()!=this->history.size()) {
+        int avgLength(0); //average watch time
+        int historyLength = this->history.size(); //num of content the user watched
+        for (int i = 0; i < historyLength; i++)
+            avgLength = avgLength + this->history[i]->getLength();
+        avgLength = avgLength / historyLength;
+        //avgLength now holds the average length, now we need to find the closest one which he hadn't seen
+        int minDist=INT32_MAX;
+        Watchable* output;
+        for(auto & i : s.getContent()) {
+            bool flag= false;
+            for(auto & j : this->history) {
+                if (i==j){
+                    flag= true;
+                    break;
+                }
+            }
+            if (!flag && minDist>std::abs(i->getLength()-avgLength)){
+                output=i;
+                minDist=std::abs(i->getLength()-avgLength);
+            }
+        }
+        return output;
     }
-    avgLength=avgLength/historyLength;
+    else
+        return nullptr;
 }
 
 //RerunRecommenderUser functions
