@@ -46,11 +46,13 @@ Session::~Session() {
     for(auto & x:this->userMap)
         delete x.second;
 }
+
 User * Session::getActiveUser() {
     return activeUser;
+
 }
 
-std::vector<Watchable *> Session::getContent() {
+std::vector<Watchable *> &Session::getContent() {
     return content;
 }
 
@@ -93,4 +95,8 @@ void Session::deleteUser(const string& userName) {
             userMap.erase(userMap.find(i.first));
         }
     }
+}
+
+int Session::contentSize() {
+    return this->content.size();
 }
