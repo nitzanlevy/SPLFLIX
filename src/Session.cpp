@@ -31,7 +31,6 @@ Session::Session(const std::string &configFilePath){
             }
         }
     }
-
 }
 
 void Session::start() {
