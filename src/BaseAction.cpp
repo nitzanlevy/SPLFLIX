@@ -59,24 +59,25 @@ void CreateUser::act(Session &sess) {
     {
         string name = action.substr(0, action.find(" "));
         string code = action.substr(action.find(" ") + 1, action.length());
-        if(isValid(name) && code.size()==3) {
-            if (code == "len") {
-                sess.addUser(name, new LengthRecommenderUser(name));
-                this->setStatus(COMPLETED);
-            }
-            else if (code == "rer") {
-                sess.addUser(name, new RerunRecommenderUser(name));
-                this->setStatus(COMPLETED);
-            }
-            else if (code == "gen") {
-                sess.addUser(name, new GenreRecommenderUser(name));
-                this->setStatus(COMPLETED);
+        if(!sess.userExist(name)) {
+            if (isValid(name) && code.size() == 3) {
+                if (code == "len") {
+                    sess.addUser(name, new LengthRecommenderUser(name));
+                    this->setStatus(COMPLETED);
+                } else if (code == "rer") {
+                    sess.addUser(name, new RerunRecommenderUser(name));
+                    this->setStatus(COMPLETED);
+                } else if (code == "gen") {
+                    sess.addUser(name, new GenreRecommenderUser(name));
+                    this->setStatus(COMPLETED);
+                } else
+                    this->error("code is invalid");
             }
             else
-                this->error("code is invalid");
+                this->error("name or code is missing");
         }
         else
-            this->error("name or code is missing");
+            this->error("The user name is already exist");
     }
     else
         this->error("name or code is missing");
