@@ -139,7 +139,7 @@ void ChangeActiveUser::act(Session &sess) {
 }
 
 std::string ChangeActiveUser::toString() const {
-
+    return "";
 }
 //end Change User
 
@@ -156,7 +156,7 @@ void DeleteUser::act(Session &sess) {
 }
 
 std::string DeleteUser::toString() const {
-
+    return "";
 }
 //End Delete User
 
@@ -200,7 +200,7 @@ void DuplicateUser::act(Session &sess) {
 
 }
 std::string DuplicateUser::toString() const {
-
+    return "";
 }
 //end Duplicate user
 //start print content list
@@ -212,7 +212,7 @@ void PrintContentList::act(Session &sess) {
     setStatus(COMPLETED);
 }
 std::string PrintContentList::toString() const {
-
+    return "";
 }
 //end print content list
 //print watch history
@@ -225,7 +225,7 @@ void PrintWatchHistory::act(Session &sess) {
     setStatus(COMPLETED);
 }
 std::string PrintWatchHistory::toString() const {
-
+    return "";
 }
 //end of print watch history
 //print action log
@@ -238,7 +238,7 @@ void PrintActionsLog::act(Session &sess) {
 }
 
 std::string PrintActionsLog::toString() const {
-
+    return "";
 }
 //end of print action log
 // Exit
@@ -248,6 +248,6 @@ void Exit::act(Session &sess) {
     setStatus(COMPLETED);
 }
 std::string Exit::toString() const {
-
+    return "";
 }
 //end of exit

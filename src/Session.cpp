@@ -7,6 +7,7 @@
 #include "../include/User.h"
 #include <fstream>
 using std::string;
+using namespace std;
 
 Session::Session(const std::string &configFilePath){
     using json = nlohmann::json ;
@@ -36,7 +37,23 @@ Session::Session(const std::string &configFilePath){
 }
 
 void Session::start() {
-
+    std::cout<< "SPLFLIX is now on!";
+    setNewActiveUser(new LengthRecommenderUser("deafult"));
+    while (continueToRun){
+        cout<<"enter a command:";
+        string command;
+        cin>>command;
+        setAction(command);
+        //handle the command
+        if (command=="exit"){
+            Exit *exit=new Exit();
+            exit->act(*this);
+        }
+        if (command=="log"){
+            PrintActionsLog *printActionsLog=new PrintActionsLog();
+            printActionsLog->act(*this);
+        }
+    }
 }
 
 Session::~Session() {
