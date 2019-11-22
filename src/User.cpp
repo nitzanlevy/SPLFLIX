@@ -47,6 +47,11 @@ int User::getHistorySize() {
 Watchable *User::getWatchableAt(int index) {
     return history.at(index);
 }
+
+std::vector<Watchable *> &User::getHistory() {
+    return history;
+}
+
 //LengthRecommenderUser functions
 LengthRecommenderUser::LengthRecommenderUser(const std::string &name) : User(name) {}
 
