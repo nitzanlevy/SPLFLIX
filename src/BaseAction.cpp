@@ -40,7 +40,7 @@ bool BaseAction::isValid(string check) {
     bool verify = true;
     for (int i = 0; i < check.length(); i++)
     {
-        if (check[i] >= 'a' && check[i] <= 'z' || check[i] >= 'A' && check[i] <= 'Z')
+        if ((check[i] >= 'a' && check[i] <= 'z') || (check[i] >= 'A' && check[i] <= 'Z'))
             verify = true;
         else
         {
@@ -228,5 +228,26 @@ std::string PrintWatchHistory::toString() const {
 
 }
 //end of print watch history
+//print action log
+void PrintActionsLog::act(Session &sess) {
+    sess.addAction(this);
+    for (int i = sess.getActionLog().size()-1; i >=0 ; --i) {
+        std::cout<<sess.getActionLog().at(i)->toString();
+    }
+    setStatus(COMPLETED);
+}
 
+std::string PrintActionsLog::toString() const {
 
+}
+//end of print action log
+// Exit
+void Exit::act(Session &sess) {
+    sess.addAction(this);
+    sess.stopRunning();
+    setStatus(COMPLETED);
+}
+std::string Exit::toString() const {
+
+}
+//end of exit

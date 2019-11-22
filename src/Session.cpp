@@ -32,6 +32,7 @@ Session::Session(const std::string &configFilePath){
             }
         }
     }
+    continueToRun=true; //keep running until otherwise
 }
 
 void Session::start() {
@@ -99,4 +100,16 @@ void Session::deleteUser(const string& userName) {
 
 int Session::contentSize() {
     return this->content.size();
+}
+
+std::vector<BaseAction *> &Session::getActionLog() {
+    return actionsLog;
+}
+
+void Session::setAction(const string& newAction) {
+        this->action=newAction;
+}
+
+void Session::stopRunning() {
+    continueToRun= false;
 }

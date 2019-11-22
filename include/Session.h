@@ -25,11 +25,15 @@ public:
     void setNewActiveUser(User*);
     void deleteUser(const string& userName);
     int contentSize();
+    std::vector<BaseAction*>& getActionLog();
+    void setAction(const string&);
+    void stopRunning();
 private:
     std::vector<Watchable*> content;
     std::vector<BaseAction*> actionsLog;
     std::unordered_map<std::string,User*> userMap;
     User* activeUser;
     string action; //added
+    bool continueToRun;
 };
 #endif
