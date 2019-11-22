@@ -48,11 +48,24 @@ void Session::start() {
         if (command=="exit"){
             Exit *exit=new Exit();
             exit->act(*this);
+            delete exit;
         }
         if (command=="log"){
             PrintActionsLog *printActionsLog=new PrintActionsLog();
             printActionsLog->act(*this);
+            delete printActionsLog;
         }
+        if (command=="watchhist"){
+            PrintWatchHistory * printWatchHistory=new PrintWatchHistory();
+            printWatchHistory->act(*this);
+            delete printWatchHistory;
+        }
+        if (command=="content"){
+            PrintContentList* printContentList=new PrintContentList();
+            printContentList->act(*this);
+            delete printContentList;
+        }
+        // until here is one word commands, now we need to split
     }
 }
 
