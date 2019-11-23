@@ -41,34 +41,100 @@ void Session::start() {
     setNewActiveUser(new LengthRecommenderUser("deafult"));
     while (continueToRun){
         cout<<""<<endl;// get down a line each time
-        cout<<"enter a command:"<<endl;
         string command;
-        cin>>command;
+        cout<<"enter a command:"<<endl;
+        getline(cin, command);
         setAction(command);
-        //handle the command
-        if (command=="exit"){
-            Exit *exit=new Exit();
-            exit->act(*this);
-            delete exit;
+        //command with 1 word
+        if(command.find(" ") ==-1) {
+            if(this->isValid(command)) {
+                //handle the command
+                if (command == "exit") {
+                    Exit *exit = new Exit();
+                    exit->act(*this);
+                    delete exit;
+                }
+                else if (command == "log") {
+                    PrintActionsLog *printActionsLog = new PrintActionsLog();
+                    printActionsLog->act(*this);
+                    delete printActionsLog;
+                }
+                else if (command == "watchhist") {
+                    PrintWatchHistory *printWatchHistory = new PrintWatchHistory();
+                    printWatchHistory->act(*this);
+                    delete printWatchHistory;
+                }
+                else if (command == "content") {
+                    PrintContentList *printContentList = new PrintContentList();
+                    printContentList->act(*this);
+                    delete printContentList;
+                }
+                else
+                    cout << "Invalid input, try again";
+            }
+            else
+                cout << "Invalid input, try again";
         }
-        if (command=="log"){
-            PrintActionsLog *printActionsLog=new PrintActionsLog();
-            printActionsLog->act(*this);
-            delete printActionsLog;
+        //command with 2 words or more
+        else {
+            string theAct = command.substr(0, command.find(" "));
+            string info = command.substr(command.find(" ") + 1, command.length());
+            //command with 2 words
+            if(info.find(" ") ==-1) {
+                if (this->isValid(theAct) && theAct.size() > 0 && info.size() > 0) {
+                    if(theAct=="changeuser" && this->isValid(info)){
+                        this->action=info;
+                        ChangeActiveUser* changeActiveUser=new ChangeActiveUser();
+                        changeActiveUser->act(*this);
+                        delete  changeActiveUser;
+                    }
+                    else if(theAct=="deleteuser" && this->isValid(info)){
+                        this->action=info;
+                        DeleteUser* deleteUser=new DeleteUser();
+                        deleteUser->act(*this);
+                        delete deleteUser;
+                    }
+                    else if(theAct=="watch" && this->isNumber(info))
+                    {
+                        this->action=info;
+                        Watch* watch=new Watch();
+                        watch->act(*this);
+                        delete watch;
+                    }
+                    else
+                        cout << "Invalid input, try again";
+                }
+                else
+                    cout << "Invalid input, try again";
+            }
+            //command with 3 words
+            else{
+                string part1 = info.substr(0, info.find(" "));
+                string part2 = info.substr(info.find(" ") + 1, info.length());
+                if (this->isValid(theAct) && this->isValid(part1) && this->isValid(part2) && theAct.size() > 0 && part1.size() > 0 && part2.size()>0) {
+                    if(theAct=="createuser"){
+                        this->action=info;
+                        CreateUser* createUser=new CreateUser();
+                        createUser->act(*this);
+                        cout << createUser->toString();
+                        delete createUser;
+                    }
+                    else if(theAct=="dupuser"){
+                        this->action=info;
+                        DuplicateUser* duplicateUser=new DuplicateUser();
+                        duplicateUser->act(*this);
+                        delete duplicateUser;
+                    }
+                    else
+                        cout << "Invalid input, try again";
+                }
+                else
+                    cout << "Invalid input, try again";
+            }
         }
-        if (command=="watchhist"){
-            PrintWatchHistory * printWatchHistory=new PrintWatchHistory();
-            printWatchHistory->act(*this);
-            delete printWatchHistory;
-        }
-        if (command=="content"){
-            PrintContentList* printContentList=new PrintContentList();
-            printContentList->act(*this);
-            delete printContentList;
-        }
-        // until here is one word commands, now we need to split
     }
 }
+
 
 Session::~Session() {
     for(auto & i : this->content)
@@ -151,4 +217,31 @@ bool Session::userExist(const string &userName) {
             return true;
     }
     return false;
+}
+
+//function to check if string include only characters
+bool Session::isValid(const string& check) {
+    bool verify = true;
+    for (int i = 0; i < check.length(); i++)
+    {
+        if ((check[i] >= 'a' && check[i] <= 'z') || (check[i] >= 'A' && check[i] <= 'Z'))
+            verify = true;
+        else
+        {
+            verify = false;
+            break;
+        }
+    }
+    return verify;
+}
+
+bool Session::isNumber(const string& str)
+{
+    for(int i = 0;i < str.size();i++) {
+        if(str[i]=='1'|| str[i]=='2' ||str[i]=='3' ||str[i]=='4' ||str[i]=='5' ||str[i]=='6'||str[i]=='7'||str[i]=='8'||str[i]=='9') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

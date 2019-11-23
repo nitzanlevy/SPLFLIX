@@ -25,7 +25,7 @@ protected:
     void complete();
     void error(const std::string& errorMsg);
     std::string getErrorMsg() const;
-    bool isValid(string str);//added
+    bool isValid(string& str);//added
     string getStatusString() const;//added
 private:
     std::string errorMsg;
