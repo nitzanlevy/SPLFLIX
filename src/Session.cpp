@@ -100,3 +100,11 @@ void Session::deleteUser(const string& userName) {
 int Session::contentSize() {
     return this->content.size();
 }
+//if userExist true, else false
+bool Session::userExist(const string &userName) {
+    for(auto & i : this->userMap) {
+        if(i.first==userName)
+            return true;
+    }
+    return false;
+}
