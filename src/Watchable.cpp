@@ -43,7 +43,7 @@ Watchable* Movie::getNextWatchable(Session & session) const {
 
 
 std::string Movie::toString() const {
-    return Watchable::toString() + "\nThe name is: "+ name;
+    return Watchable::toString() + ", The name is: "+ name + "\n";
 }
 //end movie methods
 
@@ -64,7 +64,7 @@ Watchable* Episode::getNextWatchable(Session & session) const {
 } //need to check last episode
 
 std::string Episode::toString() const {
-    return Watchable::toString()  ;
+    return Watchable::toString();
 }
 
 Watchable* Episode::getNextEpisode(Session &session) {

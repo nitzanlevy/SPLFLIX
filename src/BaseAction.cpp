@@ -107,8 +107,6 @@ void Watch::act(Session &sess) {
     int length = sess.getActiveUser()->getHistorySize();
     Watchable* watchable=sess.getActiveUser()->getWatchableAt(length-1);
 
-   
-
     Movie *m= dynamic_cast<Movie*>(watchable);
     Episode *e=dynamic_cast<Episode*>(watchable);
 

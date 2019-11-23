@@ -53,15 +53,6 @@ void Session::start() {
                     Exit *exit = new Exit();
                     exit->act(*this);
                     delete exit;
-                    if(!continueToRun){
-                        cout<<"Do you want to run the program again? y/n"<<endl;
-                        string command;
-                        cin>>command;
-                        if(command=="y")
-                            continueToRun=true;
-                        else
-                            cout << "Good bye friend";
-                    }
                 }
                 else if (command == "log") {
                     PrintActionsLog *printActionsLog = new PrintActionsLog();

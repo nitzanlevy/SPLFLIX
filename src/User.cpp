@@ -10,9 +10,8 @@ using namespace std;
     return this->history;
 }*/
 
-User::User(const std::string &name) : name(name) {
+User::User(const std::string &name) : name(name) {}
 
-}
 std::string User::getName() const {
     return name;
 }
