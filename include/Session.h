@@ -31,6 +31,8 @@ public:
     bool userExist(const string& userName);
 
 private:
+    bool isNumber(const string& check);
+    bool isValid(const string& check);
     std::vector<Watchable*> content;
     std::vector<BaseAction*> actionsLog;
     std::unordered_map<std::string,User*> userMap;

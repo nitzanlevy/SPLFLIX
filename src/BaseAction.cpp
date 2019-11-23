@@ -37,7 +37,7 @@ void BaseAction::setStatus(ActionStatus actionStatus){
     this->status=actionStatus;
 }
 //function to check if string include only characters
-bool BaseAction::isValid(string check) {
+bool BaseAction::isValid(string& check) {
     bool verify = true;
     for (int i = 0; i < check.length(); i++)
     {
@@ -64,7 +64,7 @@ std::string BaseAction::getStatusString() const {
 
 //CreateUser
 void CreateUser::act(Session &sess) {
-    //need to add function that push act to the actVector
+    sess.addAction(this); //push the action with pending status
     string action=sess.getAction();
     if(action.find(" ")!=-1)
     {
@@ -99,12 +99,13 @@ std::string CreateUser::toString() const {
     return "CreateUser: "+getStatusString() + this->getErrorMsg();
 }
 
-//Watch
+//Watch- ******need to fix this function.******
 void Watch::act(Session &sess) {
     //watch - now recommend
+    sess.addAction(this); //push the action with pending status
 
     int length = sess.getActiveUser()->getHistorySize();
-    Watchable *watchable=sess.getActiveUser()->getWatchableAt(length-1);
+    Watchable* watchable=sess.getActiveUser()->getWatchableAt(length-1);
 
    
 
@@ -123,15 +124,11 @@ void Watch::act(Session &sess) {
     else
         watchable=sess.getActiveUser()->getRecommendation(sess);
 
-           
-
-
     std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
     delete watchable;
     delete m;
     delete e;
     //Remmember to delete!!!
-
 }
 
 std::string Watch::toString() const {
@@ -215,6 +212,7 @@ std::string DuplicateUser::toString() const {
     return "Duplicate User: "+ getStatusString()+ this->getErrorMsg();
 }
 //end Duplicate user
+
 //start print content list
 void PrintContentList::act(Session &sess) {
     sess.addAction(this);
@@ -227,6 +225,7 @@ std::string PrintContentList::toString() const {
     return "Print Content List: " + getStatusString()+ this->getErrorMsg();
 }
 //end print content list
+
 //print watch history
 void PrintWatchHistory::act(Session &sess) {
     sess.addAction(this);
@@ -240,6 +239,7 @@ std::string PrintWatchHistory::toString() const {
     return "Print Watch History: " + getStatusString()+ this->getErrorMsg();
 }
 //end of print watch history
+
 //print action log
 void PrintActionsLog::act(Session &sess) {
     sess.addAction(this);
@@ -253,6 +253,7 @@ std::string PrintActionsLog::toString() const {
     return "Print Action log: " + getStatusString()+ this->getErrorMsg();
 }
 //end of print action log
+
 // Exit
 void Exit::act(Session &sess) {
     sess.addAction(this);
