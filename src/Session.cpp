@@ -133,6 +133,7 @@ int Session::contentSize() {
     return this->content.size();
 }
 
+
 std::vector<BaseAction *> &Session::getActionLog() {
     return actionsLog;
 }
@@ -143,4 +144,11 @@ void Session::setAction(const string& newAction) {
 
 void Session::stopRunning() {
     continueToRun= false;
+}
+bool Session::userExist(const string &userName) {
+    for(auto & i : this->userMap) {
+        if(i.first==userName)
+            return true;
+    }
+    return false;
 }

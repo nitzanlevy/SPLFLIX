@@ -24,10 +24,12 @@ public:
     User* getUser(const string& userName);
     void setNewActiveUser(User*);
     void deleteUser(const string& userName);
-    int contentSize();
     std::vector<BaseAction*>& getActionLog();
     void setAction(const string&);
     void stopRunning();
+    int contentSize();// added
+    bool userExist(const string& userName);
+
 private:
     std::vector<Watchable*> content;
     std::vector<BaseAction*> actionsLog;
