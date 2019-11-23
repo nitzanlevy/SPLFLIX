@@ -95,7 +95,7 @@ void CreateUser::act(Session &sess) {
 }
 
 std::string CreateUser::toString() const {
-    return "CreateUser: "+getStatusString();
+    return "CreateUser: "+getStatusString() + this->getErrorMsg();
 }
 
 //Watch
@@ -134,7 +134,7 @@ void Watch::act(Session &sess) {
 }
 
 std::string Watch::toString() const {
-    return "Watching: "+getStatusString();
+    return "Watching: "+getStatusString()+ this->getErrorMsg();
 }
 
 //Change User
@@ -150,7 +150,7 @@ void ChangeActiveUser::act(Session &sess) {
 }
 
 std::string ChangeActiveUser::toString() const {
-    return "Change Active User: "+getStatusString();
+    return "Change Active User: "+getStatusString()+ this->getErrorMsg();
 }
 //end Change User
 
@@ -167,7 +167,7 @@ void DeleteUser::act(Session &sess) {
 }
 
 std::string DeleteUser::toString() const {
-    return "Delete user: "+ getStatusString();
+    return "Delete user: "+ getStatusString()+ this->getErrorMsg();
 }
 //End Delete User
 
@@ -211,7 +211,7 @@ void DuplicateUser::act(Session &sess) {
 
 }
 std::string DuplicateUser::toString() const {
-    return "Duplicate User: "+ getStatusString();
+    return "Duplicate User: "+ getStatusString()+ this->getErrorMsg();
 }
 //end Duplicate user
 //start print content list
@@ -223,7 +223,7 @@ void PrintContentList::act(Session &sess) {
     setStatus(COMPLETED);
 }
 std::string PrintContentList::toString() const {
-    return "Print Content List: " + getStatusString();
+    return "Print Content List: " + getStatusString()+ this->getErrorMsg();
 }
 //end print content list
 //print watch history
@@ -236,7 +236,7 @@ void PrintWatchHistory::act(Session &sess) {
     setStatus(COMPLETED);
 }
 std::string PrintWatchHistory::toString() const {
-    return "Print Watch History: " + getStatusString();
+    return "Print Watch History: " + getStatusString()+ this->getErrorMsg();
 }
 //end of print watch history
 //print action log
@@ -249,7 +249,7 @@ void PrintActionsLog::act(Session &sess) {
 }
 
 std::string PrintActionsLog::toString() const {
-    return "Print Action log: " + getStatusString();
+    return "Print Action log: " + getStatusString()+ this->getErrorMsg();
 }
 //end of print action log
 // Exit
@@ -259,6 +259,6 @@ void Exit::act(Session &sess) {
     setStatus(COMPLETED);
 }
 std::string Exit::toString() const {
-    return "Exit: " + getStatusString();
+    return "Exit: " + getStatusString()+ this->getErrorMsg();
 }
 //end of exit

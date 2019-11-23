@@ -40,6 +40,7 @@ public:
     RerunRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
 private:
+    int indexOfLastRecommendation;
 };
 
 class GenreRecommenderUser : public User {
