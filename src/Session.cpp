@@ -40,7 +40,8 @@ void Session::start() {
     std::cout<< "SPLFLIX is now on!";
     setNewActiveUser(new LengthRecommenderUser("deafult"));
     while (continueToRun){
-        cout<<"enter a command:";
+        cout<<""<<endl;// get down a line each time
+        cout<<"enter a command:"<<endl;
         string command;
         cin>>command;
         setAction(command);

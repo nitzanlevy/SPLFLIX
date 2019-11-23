@@ -5,6 +5,7 @@
 #include "../include/User.h"
 #include "../include/Session.h"
 #include "../include/Watchable.h"
+
 using std::string;
 
 BaseAction::BaseAction() {
@@ -51,6 +52,16 @@ bool BaseAction::isValid(string check) {
     return verify;
 }
 
+std::string BaseAction::getStatusString() const {
+    if (status==PENDING){
+        return "Pending";
+    }
+    if (status==COMPLETED){
+        return "Completed";
+    }
+    return "Error";
+}
+
 //CreateUser
 void CreateUser::act(Session &sess) {
     //need to add function that push act to the actVector
@@ -84,7 +95,7 @@ void CreateUser::act(Session &sess) {
 }
 
 std::string CreateUser::toString() const {
-    return " ";
+    return "CreateUser: "+getStatusString();
 }
 
 //Watch
@@ -123,7 +134,7 @@ void Watch::act(Session &sess) {
 }
 
 std::string Watch::toString() const {
-    return "Watching: ";
+    return "Watching: "+getStatusString();
 }
 
 //Change User
@@ -139,7 +150,7 @@ void ChangeActiveUser::act(Session &sess) {
 }
 
 std::string ChangeActiveUser::toString() const {
-    return "";
+    return "Change Active User: "+getStatusString();
 }
 //end Change User
 
@@ -156,7 +167,7 @@ void DeleteUser::act(Session &sess) {
 }
 
 std::string DeleteUser::toString() const {
-    return "";
+    return "Delete user: "+ getStatusString();
 }
 //End Delete User
 
@@ -200,7 +211,7 @@ void DuplicateUser::act(Session &sess) {
 
 }
 std::string DuplicateUser::toString() const {
-    return "";
+    return "Duplicate User: "+ getStatusString();
 }
 //end Duplicate user
 //start print content list
@@ -212,7 +223,7 @@ void PrintContentList::act(Session &sess) {
     setStatus(COMPLETED);
 }
 std::string PrintContentList::toString() const {
-    return "";
+    return "Print Content List: " + getStatusString();
 }
 //end print content list
 //print watch history
@@ -225,7 +236,7 @@ void PrintWatchHistory::act(Session &sess) {
     setStatus(COMPLETED);
 }
 std::string PrintWatchHistory::toString() const {
-    return "";
+    return "Print Watch History: " + getStatusString();
 }
 //end of print watch history
 //print action log
@@ -238,7 +249,7 @@ void PrintActionsLog::act(Session &sess) {
 }
 
 std::string PrintActionsLog::toString() const {
-    return "";
+    return "Print Action log: " + getStatusString();
 }
 //end of print action log
 // Exit
@@ -248,6 +259,6 @@ void Exit::act(Session &sess) {
     setStatus(COMPLETED);
 }
 std::string Exit::toString() const {
-    return "";
+    return "Exit: " + getStatusString();
 }
 //end of exit
