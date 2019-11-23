@@ -5,6 +5,7 @@
 #include "../include/User.h"
 #include "../include/Session.h"
 #include "../include/Watchable.h"
+
 using std::string;
 
 BaseAction::BaseAction() {
@@ -40,7 +41,7 @@ bool BaseAction::isValid(string check) {
     bool verify = true;
     for (int i = 0; i < check.length(); i++)
     {
-        if (check[i] >= 'a' && check[i] <= 'z' || check[i] >= 'A' && check[i] <= 'Z')
+        if ((check[i] >= 'a' && check[i] <= 'z') || (check[i] >= 'A' && check[i] <= 'Z'))
             verify = true;
         else
         {
@@ -49,6 +50,16 @@ bool BaseAction::isValid(string check) {
         }
     }
     return verify;
+}
+
+std::string BaseAction::getStatusString() const {
+    if (status==PENDING){
+        return "Pending";
+    }
+    if (status==COMPLETED){
+        return "Completed";
+    }
+    return "Error";
 }
 
 //CreateUser
@@ -85,7 +96,7 @@ void CreateUser::act(Session &sess) {
 }
 
 std::string CreateUser::toString() const {
-    return " ";
+    return "CreateUser: "+getStatusString() + this->getErrorMsg();
 }
 
 //Watch
@@ -124,7 +135,7 @@ void Watch::act(Session &sess) {
 }
 
 std::string Watch::toString() const {
-    return "Watching: ";
+    return "Watching: "+getStatusString()+ this->getErrorMsg();
 }
 
 //Change User
@@ -140,7 +151,7 @@ void ChangeActiveUser::act(Session &sess) {
 }
 
 std::string ChangeActiveUser::toString() const {
-
+    return "Change Active User: "+getStatusString()+ this->getErrorMsg();
 }
 //end Change User
 
@@ -157,7 +168,7 @@ void DeleteUser::act(Session &sess) {
 }
 
 std::string DeleteUser::toString() const {
-
+    return "Delete user: "+ getStatusString()+ this->getErrorMsg();
 }
 //End Delete User
 
@@ -201,8 +212,54 @@ void DuplicateUser::act(Session &sess) {
 
 }
 std::string DuplicateUser::toString() const {
-
+    return "Duplicate User: "+ getStatusString()+ this->getErrorMsg();
 }
 //end Duplicate user
+//start print content list
+void PrintContentList::act(Session &sess) {
+    sess.addAction(this);
+    for(auto & i : sess.getContent()) {
+        std::cout << i->toString();
+    }
+    setStatus(COMPLETED);
+}
+std::string PrintContentList::toString() const {
+    return "Print Content List: " + getStatusString()+ this->getErrorMsg();
+}
+//end print content list
+//print watch history
+void PrintWatchHistory::act(Session &sess) {
+    sess.addAction(this);
+    std::cout<< "Watch history for:"+sess.getActiveUser()->getName();
+    for(auto & i : sess.getActiveUser()->getHistory()) {
+        std::cout << i->toString();
+    }
+    setStatus(COMPLETED);
+}
+std::string PrintWatchHistory::toString() const {
+    return "Print Watch History: " + getStatusString()+ this->getErrorMsg();
+}
+//end of print watch history
+//print action log
+void PrintActionsLog::act(Session &sess) {
+    sess.addAction(this);
+    for (int i = sess.getActionLog().size()-1; i >=0 ; --i) {
+        std::cout<<sess.getActionLog().at(i)->toString();
+    }
+    setStatus(COMPLETED);
+}
 
-
+std::string PrintActionsLog::toString() const {
+    return "Print Action log: " + getStatusString()+ this->getErrorMsg();
+}
+//end of print action log
+// Exit
+void Exit::act(Session &sess) {
+    sess.addAction(this);
+    sess.stopRunning();
+    setStatus(COMPLETED);
+}
+std::string Exit::toString() const {
+    return "Exit: " + getStatusString()+ this->getErrorMsg();
+}
+//end of exit

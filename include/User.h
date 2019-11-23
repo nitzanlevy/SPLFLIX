@@ -19,6 +19,7 @@ public:
     //std::vector<Watchable*> get_history() const;
     Watchable* getWatchableAt(int index); //added
     int getHistorySize(); //added
+    std::vector<Watchable*>& getHistory();
 protected:
     std::vector<Watchable*> history;
 private:
@@ -39,6 +40,7 @@ public:
     RerunRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
 private:
+    int indexOfLastRecommendation;
 };
 
 class GenreRecommenderUser : public User {

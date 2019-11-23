@@ -7,6 +7,7 @@
 #include "../include/User.h"
 #include <fstream>
 using std::string;
+using namespace std;
 
 Session::Session(const std::string &configFilePath){
     using json = nlohmann::json ;
@@ -32,10 +33,41 @@ Session::Session(const std::string &configFilePath){
             }
         }
     }
+    continueToRun=true; //keep running until otherwise
 }
 
 void Session::start() {
-
+    std::cout<< "SPLFLIX is now on!";
+    setNewActiveUser(new LengthRecommenderUser("deafult"));
+    while (continueToRun){
+        cout<<""<<endl;// get down a line each time
+        cout<<"enter a command:"<<endl;
+        string command;
+        cin>>command;
+        setAction(command);
+        //handle the command
+        if (command=="exit"){
+            Exit *exit=new Exit();
+            exit->act(*this);
+            delete exit;
+        }
+        if (command=="log"){
+            PrintActionsLog *printActionsLog=new PrintActionsLog();
+            printActionsLog->act(*this);
+            delete printActionsLog;
+        }
+        if (command=="watchhist"){
+            PrintWatchHistory * printWatchHistory=new PrintWatchHistory();
+            printWatchHistory->act(*this);
+            delete printWatchHistory;
+        }
+        if (command=="content"){
+            PrintContentList* printContentList=new PrintContentList();
+            printContentList->act(*this);
+            delete printContentList;
+        }
+        // until here is one word commands, now we need to split
+    }
 }
 
 Session::~Session() {
@@ -100,7 +132,19 @@ void Session::deleteUser(const string& userName) {
 int Session::contentSize() {
     return this->content.size();
 }
-//if userExist true, else false
+
+
+std::vector<BaseAction *> &Session::getActionLog() {
+    return actionsLog;
+}
+
+void Session::setAction(const string& newAction) {
+        this->action=newAction;
+}
+
+void Session::stopRunning() {
+    continueToRun= false;
+}
 bool Session::userExist(const string &userName) {
     for(auto & i : this->userMap) {
         if(i.first==userName)

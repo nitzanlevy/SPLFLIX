@@ -23,6 +23,10 @@ std::string Watchable::toString() const {
 int Watchable::getId() {
     return id;
 }
+
+std::vector<std::string> &Watchable::getTags() {
+    return tags;
+}
 //end of watchable methods
 
 //start Movie methods

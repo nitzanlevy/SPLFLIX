@@ -1,6 +1,8 @@
 #include "../include/User.h"
 #include "../include/Watchable.h"
 #include "../include/Session.h"
+#include <algorithm>
+using namespace std;
 //
 // Created by amit on 18/11/2019.
 //
@@ -47,9 +49,13 @@ int User::getHistorySize() {
 Watchable *User::getWatchableAt(int index) {
     return history.at(index);
 }
+
+std::vector<Watchable *> &User::getHistory() {
+    return history;
+}
+
 //LengthRecommenderUser functions
 LengthRecommenderUser::LengthRecommenderUser(const std::string &name) : User(name) {}
-
 
 Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
     if(s.contentSize()!=this->history.size()) {
@@ -81,13 +87,40 @@ Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
 }
 
 //RerunRecommenderUser functions
-RerunRecommenderUser::RerunRecommenderUser(const std::string &name): User(name) {}
+RerunRecommenderUser::RerunRecommenderUser(const std::string &name): User(name) {
+    indexOfLastRecommendation=-1; //indexes that nothing had been recommended yet
+}
 
-Watchable* RerunRecommenderUser::getRecommendation(Session &s) {}
+Watchable* RerunRecommenderUser::getRecommendation(Session &s) {
+    if (getHistorySize()==0){
+        return nullptr;
+    } //history is empty, nothing to offer
+    if (indexOfLastRecommendation==-1){
+        indexOfLastRecommendation=0;
+        return this->history[indexOfLastRecommendation];
+    }
+    return this->history[(indexOfLastRecommendation+1)%getHistorySize()];
+}
 
 //GenreRecommenderUser functions
 GenreRecommenderUser::GenreRecommenderUser(const std::string &name): User(name) {}
-Watchable* GenreRecommenderUser::getRecommendation(Session &s) {}
+Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
+    if (getHistorySize()==0){
+        return nullptr;
+    } //there is no genre to match to.
+    unordered_map<string, int>* freq=new unordered_map<string,int >();
+    /*for (auto &i :this->history) {
+        for (auto &j:i->getTags()) {
+            if (freq->find(j)=!freq->end()){
+
+            }
+            else{
+
+            }
+        }
+    }*/
+    return nullptr;
+}
 
 
 

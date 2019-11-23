@@ -24,13 +24,18 @@ public:
     User* getUser(const string& userName);
     void setNewActiveUser(User*);
     void deleteUser(const string& userName);
+    std::vector<BaseAction*>& getActionLog();
+    void setAction(const string&);
+    void stopRunning();
     int contentSize();// added
     bool userExist(const string& userName);
+
 private:
     std::vector<Watchable*> content;
     std::vector<BaseAction*> actionsLog;
     std::unordered_map<std::string,User*> userMap;
     User* activeUser;
     string action; //added
+    bool continueToRun;
 };
 #endif

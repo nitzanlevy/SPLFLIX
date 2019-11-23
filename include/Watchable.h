@@ -15,6 +15,7 @@ public:
     virtual Watchable* getNextWatchable(Session&) const = 0;
     virtual int getLength() const; // added to use recommendation algorithms
     int getId();//added
+    std::vector<std::string>&getTags();
 private:
     const long id;
     int length;
