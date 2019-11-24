@@ -6,6 +6,8 @@
 #include "../include/Watchable.h"
 #include "../include/User.h"
 #include <fstream>
+#include <sstream>
+
 using std::string;
 using namespace std;
 
@@ -96,10 +98,17 @@ void Session::start() {
                     }
                     else if(theAct=="watch" && this->isNumber(info))
                     {
-                        this->action=info;
-                        Watch* watch=new Watch();
-                        watch->act(*this);
-                        delete watch;
+                        std::stringstream geek(info);
+                        int id;
+                        geek>>id;
+                        if(id < this->content.size()) {
+                            this->action = info;
+                            Watch *watch = new Watch();
+                            watch->act(*this);
+                            delete watch;
+                        }
+                        else
+                            cout << "Invalid input, try again";
                     }
                     else
                         cout << "Invalid input, try again";
@@ -143,11 +152,11 @@ Session::~Session() {
         delete i;
     for(auto & x:this->userMap)
         delete x.second;
+
 }
 
 User * Session::getActiveUser() {
     return activeUser;
-
 }
 
 std::vector<Watchable *> &Session::getContent() {
@@ -238,7 +247,7 @@ bool Session::isValid(const string& check) {
 bool Session::isNumber(const string& str)
 {
     for(int i = 0;i < str.size();i++) {
-        if(str[i]=='1'|| str[i]=='2' ||str[i]=='3' ||str[i]=='4' ||str[i]=='5' ||str[i]=='6'||str[i]=='7'||str[i]=='8'||str[i]=='9') {
+        if(str[i]=='0' || str[i]=='1'|| str[i]=='2' ||str[i]=='3' ||str[i]=='4' ||str[i]=='5' ||str[i]=='6'||str[i]=='7'||str[i]=='8'||str[i]=='9') {
             return true;
         } else {
             return false;

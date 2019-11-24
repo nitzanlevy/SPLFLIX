@@ -20,6 +20,7 @@ public:
     Watchable* getWatchableAt(int index); //added
     int getHistorySize(); //added
     std::vector<Watchable*>& getHistory();
+    void addToHistory( Watchable* watch);
 protected:
     std::vector<Watchable*> history;
 private:

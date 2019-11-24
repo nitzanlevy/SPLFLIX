@@ -53,6 +53,10 @@ std::vector<Watchable *> &User::getHistory() {
     return history;
 }
 
+void User::addToHistory(Watchable* watch) {
+    this->history.push_back(watch);
+}
+
 //LengthRecommenderUser functions
 LengthRecommenderUser::LengthRecommenderUser(const std::string &name) : User(name) {}
 

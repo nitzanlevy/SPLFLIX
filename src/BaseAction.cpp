@@ -1,6 +1,7 @@
 //
 // Created by amit on 18/11/2019.
 //
+#include <sstream>
 #include "../include/Action.h"
 #include "../include/User.h"
 #include "../include/Session.h"
@@ -14,7 +15,7 @@ BaseAction::BaseAction() {
 }
 
 void BaseAction ::complete() {
-
+    this->status=COMPLETED;
 }
 
 void BaseAction::error(const std::string &errorMsg) {
@@ -33,9 +34,6 @@ BaseAction::~BaseAction() {
 
 }
 
-void BaseAction::setStatus(ActionStatus actionStatus){
-    this->status=actionStatus;
-}
 //function to check if string include only characters
 bool BaseAction::isValid(string& check) {
     bool verify = true;
@@ -74,13 +72,13 @@ void CreateUser::act(Session &sess) {
             if (isValid(name) && code.size() == 3) {
                 if (code == "len") {
                     sess.addUser(name, new LengthRecommenderUser(name));
-                    this->setStatus(COMPLETED);
+                    this->complete();
                 } else if (code == "rer") {
                     sess.addUser(name, new RerunRecommenderUser(name));
-                    this->setStatus(COMPLETED);
+                    this->complete();
                 } else if (code == "gen") {
                     sess.addUser(name, new GenreRecommenderUser(name));
-                    this->setStatus(COMPLETED);
+                    this->complete();
                 } else
                     this->error("code is invalid");
             }
@@ -103,29 +101,25 @@ std::string CreateUser::toString() const {
 void Watch::act(Session &sess) {
     //watch - now recommend
     sess.addAction(this); //push the action with pending status
-
-    int length = sess.getActiveUser()->getHistorySize();
-    Watchable* watchable=sess.getActiveUser()->getWatchableAt(length-1);
-
-    Movie *m= dynamic_cast<Movie*>(watchable);
+    std::stringstream geek(sess.getAction());
+    int id;
+    geek>>id;
+    Watchable* watchable=sess.getWatchable(id); //watchable holds the watchable we want to watch
+    sess.getActiveUser()->addToHistory(watchable); //became seen
     Episode *e=dynamic_cast<Episode*>(watchable);
 
-    if (e){
+    if (e){ //he watched episode
         int nextId=e->getId()+1;
-        Episode *episode=dynamic_cast<Episode*>(sess.getWatchable(nextId));
+        Episode *episode=dynamic_cast<Episode*>(sess.getWatchable(nextId)); //the next episode, need range check
         if (episode && e->getName()== episode->getName())
-            watchable=e;
+            watchable= episode;
         else
             watchable=sess.getActiveUser()->getRecommendation(sess);
-        delete episode;
     }
     else
         watchable=sess.getActiveUser()->getRecommendation(sess);
 
     std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
-    delete watchable;
-    delete m;
-    delete e;
     //Remmember to delete!!!
 }
 
@@ -139,7 +133,7 @@ void ChangeActiveUser::act(Session &sess) {
     string action=sess.getAction(); //the User name to switch to.
     if (sess.getUser(action)){
         sess.setNewActiveUser(sess.getUser(action));
-        setStatus(COMPLETED);
+        this->complete();
     } else{
         error("User not exists");
     }
@@ -156,7 +150,7 @@ void DeleteUser::act(Session &sess) {
     string action=sess.getAction();
     if (sess.getUser(action)){
         sess.deleteUser(action);
-        setStatus(COMPLETED);
+        this->complete();
     } else{
         error("User not exists");
     }
@@ -199,7 +193,7 @@ void DuplicateUser::act(Session &sess) {
             delete user; //CareFull!
             delete user2;
             delete user3;
-            setStatus(COMPLETED);
+            this->complete();
         } else {
             error("User not exists");
         }
@@ -217,7 +211,7 @@ void PrintContentList::act(Session &sess) {
     for(auto & i : sess.getContent()) {
         std::cout << i->toString();
     }
-    setStatus(COMPLETED);
+    this->complete();
 }
 std::string PrintContentList::toString() const {
     return "Print Content List: " + getStatusString()+ this->getErrorMsg();
@@ -231,7 +225,7 @@ void PrintWatchHistory::act(Session &sess) {
     for(auto & i : sess.getActiveUser()->getHistory()) {
         std::cout << i->toString();
     }
-    setStatus(COMPLETED);
+    this->complete();
 }
 std::string PrintWatchHistory::toString() const {
     return "Print Watch History: " + getStatusString()+ this->getErrorMsg();
@@ -244,7 +238,7 @@ void PrintActionsLog::act(Session &sess) {
     for (int i = sess.getActionLog().size()-1; i >=0 ; --i) {
         std::cout<<sess.getActionLog().at(i)->toString();
     }
-    setStatus(COMPLETED);
+    this->complete();
 }
 
 std::string PrintActionsLog::toString() const {
@@ -256,7 +250,7 @@ std::string PrintActionsLog::toString() const {
 void Exit::act(Session &sess) {
     sess.addAction(this);
     sess.stopRunning();
-    setStatus(COMPLETED);
+    this->complete();
 }
 std::string Exit::toString() const {
     return "Exit: " + getStatusString()+ this->getErrorMsg();
