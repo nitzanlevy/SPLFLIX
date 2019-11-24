@@ -4,7 +4,7 @@
 using namespace std;
 
 int main(int argc, char** argv){
-        Session* session=new Session("/home/nitzan/Desktop/SPLFLIX/config1.json");
+        Session* session=new Session("/home/amit/Desktop/SPLFLIX/config1.json");
         session->start();
         return 0;
 }

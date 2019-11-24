@@ -53,6 +53,14 @@ std::vector<Watchable *> &User::getHistory() {
     return history;
 }
 
+User::User(User && user) {
+
+}
+
+User &User::operator=(User &&) {
+    return *this;
+}
+
 //LengthRecommenderUser functions
 LengthRecommenderUser::LengthRecommenderUser(const std::string &name) : User(name) {}
 

@@ -132,6 +132,13 @@ void Session::start() {
                     cout << "Invalid input, try again";
             }
         }
+        if (!continueToRun){
+            cout<<"rerun? [y/n]"<<endl;
+            string rerun;
+            getline(cin,rerun);
+            if (rerun=="y")
+                continueToRun= true;
+        }
     }
 }
 
