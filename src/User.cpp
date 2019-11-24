@@ -53,8 +53,26 @@ std::vector<Watchable *> &User::getHistory() {
     return history;
 }
 
+
+User::User(User && other) {
+    for (auto &i:this->history) {
+        delete i;
+    } //delete user history
+    this->history=other.history;
+    delete &other.history;
+}
+
+User &User::operator=(User &&other) {
+    for (auto &i:this->history) {
+        delete i;
+    } //delete user history
+    this->history=other.history;
+    delete &other.history;
+    return *this;
+}
 void User::addToHistory(Watchable* watch) {
     this->history.push_back(watch);
+
 }
 
 //LengthRecommenderUser functions

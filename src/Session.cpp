@@ -141,6 +141,13 @@ void Session::start() {
                     cout << "Invalid input, try again";
             }
         }
+        if (!continueToRun){
+            cout<<"rerun? [y/n]"<<endl;
+            string rerun;
+            getline(cin,rerun);
+            if (rerun=="y")
+                continueToRun= true;
+        }
     }
 }
 
@@ -152,6 +159,8 @@ Session::~Session() {
         delete i;
     for(auto & x:this->userMap)
         delete x.second;
+    //delete active user
+
 
 }
 
@@ -253,4 +262,16 @@ bool Session::isNumber(const string& str)
             return false;
         }
     }
+}
+
+Session &Session::operator=(Session &&) {
+    return *this;
+}
+
+Session &Session::operator=(const Session &) {
+    return *this;
+}
+
+Session::Session(const Session &) {
+
 }

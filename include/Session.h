@@ -13,6 +13,9 @@ class Watchable;
 class Session{
 public:
     Session(const std::string &configFilePath);
+    Session(const Session &); //Copy constructor
+    Session&operator=(const Session&); //Copy assignment operator
+    Session &operator=(Session &&); //move assignment operator
     ~Session();
     void start();
     User * getActiveUser(); //added to get recommendation

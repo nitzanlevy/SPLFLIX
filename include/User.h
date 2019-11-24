@@ -20,7 +20,10 @@ public:
     Watchable* getWatchableAt(int index); //added
     int getHistorySize(); //added
     std::vector<Watchable*>& getHistory();
+    User (User &&); //move assignment constructor
+    User &operator=(User &&); //move assignment operator
     void addToHistory( Watchable* watch);
+
 protected:
     std::vector<Watchable*> history;
 private:
