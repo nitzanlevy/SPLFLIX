@@ -120,6 +120,12 @@ void Watch::act(Session &sess) {
         watchable=sess.getActiveUser()->getRecommendation(sess);
 
     std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
+    string command;
+    getline(std::cin, command);
+    if(command=="y") {
+        sess.setAction(std::to_string(watchable->getId()));
+        this->act(sess);
+    }
     //Remmember to delete!!!
 }
 
@@ -168,8 +174,9 @@ void DuplicateUser::act(Session &sess) {
     if(action.find(" ")!=-1) {
         string existingUser = action.substr(0, action.find(" "));
         string newOne = action.substr(action.find(" ") + 1, action.length());
-
-        if (sess.getUser(existingUser)) {
+        if (sess.userExist(newOne))
+            error("user already exists");
+        else if (sess.getUser(existingUser)) {
             //learn how to know user type
             LengthRecommenderUser *user = dynamic_cast<LengthRecommenderUser *>(sess.getUser(existingUser));
             RerunRecommenderUser *user2 = dynamic_cast<RerunRecommenderUser *>(sess.getUser(existingUser));
@@ -190,9 +197,9 @@ void DuplicateUser::act(Session &sess) {
                 newUser->operator=(*(dynamic_cast<GenreRecommenderUser*>(sess.getUser(existingUser))));
                 sess.addUser(newOne,newUser);
             }
-            delete user; //CareFull!
-            delete user2;
-            delete user3;
+            //delete user; //CareFull!
+            //delete user2;
+            //delete user3;
             this->complete();
         } else {
             error("User not exists");

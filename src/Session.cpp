@@ -132,6 +132,7 @@ void Session::start() {
                         this->action=info;
                         DuplicateUser* duplicateUser=new DuplicateUser();
                         duplicateUser->act(*this);
+                        cout<<duplicateUser->toString();
                         delete duplicateUser;
                     }
                     else
