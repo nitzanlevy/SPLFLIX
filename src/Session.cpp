@@ -150,6 +150,7 @@ Session::~Session() {
         delete i;
     for(auto & x:this->userMap)
         delete x.second;
+    //delete active user
 }
 
 User * Session::getActiveUser() {
