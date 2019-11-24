@@ -253,3 +253,15 @@ bool Session::isNumber(const string& str)
         }
     }
 }
+
+Session &Session::operator=(Session &&) {
+    return *this;
+}
+
+Session &Session::operator=(const Session &) {
+    return *this;
+}
+
+Session::Session(const Session &) {
+
+}
