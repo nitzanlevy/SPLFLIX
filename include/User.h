@@ -22,6 +22,8 @@ public:
     std::vector<Watchable*>& getHistory();
     User (User &&); //move assignment constructor
     User &operator=(User &&); //move assignment operator
+    void addToHistory( Watchable* watch);
+
 protected:
     std::vector<Watchable*> history;
 private:

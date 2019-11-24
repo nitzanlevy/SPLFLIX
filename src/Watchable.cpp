@@ -64,7 +64,7 @@ Watchable* Episode::getNextWatchable(Session & session) const {
 } //need to check last episode
 
 std::string Episode::toString() const {
-    return Watchable::toString();
+    return Watchable::toString() + ", The season is: " + std::to_string(season) + " The episode is: " + std::to_string(episode) + ", The seriesName is: "+ seriesName;
 }
 
 Watchable* Episode::getNextEpisode(Session &session) {
