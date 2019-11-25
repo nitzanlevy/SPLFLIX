@@ -37,11 +37,9 @@ Movie::Movie(long id, const std::string &name, int length, const std::vector<std
 Movie::~Movie() {}
 
 Watchable* Movie::getNextWatchable(Session & session) const {
-
     return session.getActiveUser()->getRecommendation(session);
 
 }
-
 
 std::string Movie::toString() const {
     return Watchable::toString() + ", The name is: "+ name + "\n";
@@ -49,6 +47,10 @@ std::string Movie::toString() const {
 
 Watchable *Movie::clone() const {
     return new Movie(getId(),name,getLength(),getTags());
+}
+
+bool Movie::isEpisode() const {
+    return false;
 }
 //end movie methods
 
@@ -61,18 +63,20 @@ Episode::Episode(long id, const std::string &seriesName, int length, int season,
 Episode::~Episode(){}
 
 Watchable* Episode::getNextWatchable(Session & session) const {
-
-    int length=session.getActiveUser()->getHistorySize();
-    return dynamic_cast<Episode*>(session.getActiveUser()->getWatchableAt(length-1))->getNextEpisode(session);
-
-    
+    Watchable *nextWatchable=getNextEpisode(session);
+    if (nextWatchable->isEpisode()){
+        if (((Episode*)nextWatchable)->seriesName==this->seriesName){
+            return nextWatchable;
+        }
+    }
+    return session.getActiveUser()->getRecommendation(session);
 } //need to check last episode
 
 std::string Episode::toString() const {
     return Watchable::toString() + ", The season is: " + std::to_string(season) + " The episode is: " + std::to_string(episode) + ", The seriesName is: "+ seriesName;
 }
 
-Watchable* Episode::getNextEpisode(Session &session) {
+Watchable* Episode::getNextEpisode(Session &session) const {
     long id =this->getId()+1;
     for(auto & x:session.getContent()) {
         if (x->getId() == id)
@@ -87,6 +91,10 @@ std::string Episode::getName() {
 
 Watchable *Episode::clone() const {
     return new Episode(getId(),seriesName,getLength(),season,episode,getTags());
+}
+
+bool Episode::isEpisode() const {
+    return true;
 }
 
 //end episode methods

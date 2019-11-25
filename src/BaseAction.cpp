@@ -103,7 +103,7 @@ std::string CreateUser::toString() const {
 }
 
 BaseAction *CreateUser::clone() const {
-    return new CreateUser();
+    return new CreateUser(*this);
 }
 
 //Watch- ******need to fix this function.******
@@ -115,18 +115,7 @@ void Watch::act(Session &sess) {
     geek>>id;
     Watchable* watchable=sess.getWatchable(id); //watchable holds the watchable we want to watch
     sess.getActiveUser()->addToHistory(watchable); //became seen
-    Episode *e=dynamic_cast<Episode*>(watchable);
-
-    if (e){ //he watched episode
-        int nextId=e->getId()+1;
-        Episode *episode=dynamic_cast<Episode*>(sess.getWatchable(nextId)); //the next episode, need range check
-        if (episode && e->getName()== episode->getName())
-            watchable= episode;
-        else
-            watchable=sess.getActiveUser()->getRecommendation(sess);
-    }
-    else
-        watchable=sess.getActiveUser()->getRecommendation(sess);
+    watchable=watchable->getNextWatchable(sess); //getNextWatchable
     this->complete();
     std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
     string command;
@@ -143,7 +132,7 @@ std::string Watch::toString() const {
 }
 
 BaseAction *Watch::clone() const {
-    return new Watch();
+    return new Watch(*this);
 }
 
 //Change User
@@ -163,7 +152,7 @@ std::string ChangeActiveUser::toString() const {
 }
 
 BaseAction *ChangeActiveUser::clone() const {
-    return new ChangeActiveUser();
+    return new ChangeActiveUser(*this);
 }
 //end Change User
 
@@ -184,7 +173,7 @@ std::string DeleteUser::toString() const {
 }
 
 BaseAction *DeleteUser::clone() const {
-    return new DeleteUser();
+    return new DeleteUser(*this);
 }
 //End Delete User
 
@@ -213,7 +202,7 @@ std::string DuplicateUser::toString() const {
 }
 
 BaseAction *DuplicateUser::clone() const {
-    return new DuplicateUser();
+    return new DuplicateUser(*this);
 }
 //end Duplicate user
 
@@ -230,7 +219,7 @@ std::string PrintContentList::toString() const {
 }
 
 BaseAction *PrintContentList::clone() const {
-    return new PrintContentList();
+    return new PrintContentList(*this);
 }
 //end print content list
 
@@ -248,7 +237,7 @@ std::string PrintWatchHistory::toString() const {
 }
 
 BaseAction *PrintWatchHistory::clone() const {
-    return new PrintWatchHistory();
+    return new PrintWatchHistory(*this);
 }
 //end of print watch history
 
@@ -267,7 +256,7 @@ std::string PrintActionsLog::toString() const {
 }
 
 BaseAction *PrintActionsLog::clone() const {
-    return new PrintActionsLog();
+    return new PrintActionsLog(*this);
 }
 //end of print action log
 
@@ -282,7 +271,7 @@ std::string Exit::toString() const {
 }
 
 BaseAction *Exit::clone() const {
-    return new Exit();
+    return new Exit(*this);
 }
 
 //end of exit
