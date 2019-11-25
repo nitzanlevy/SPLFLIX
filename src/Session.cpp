@@ -54,22 +54,18 @@ void Session::start() {
                 if (command == "exit") {
                     Exit *exit = new Exit();
                     exit->act(*this);
-                    delete exit;
                 }
                 else if (command == "log") {
                     PrintActionsLog *printActionsLog = new PrintActionsLog();
                     printActionsLog->act(*this);
-                    delete printActionsLog;
                 }
                 else if (command == "watchhist") {
                     PrintWatchHistory *printWatchHistory = new PrintWatchHistory();
                     printWatchHistory->act(*this);
-                    delete printWatchHistory;
                 }
                 else if (command == "content") {
                     PrintContentList *printContentList = new PrintContentList();
                     printContentList->act(*this);
-                    delete printContentList;
                 }
                 else
                     cout << "Invalid input, try again";
@@ -88,13 +84,11 @@ void Session::start() {
                         this->action=info;
                         ChangeActiveUser* changeActiveUser=new ChangeActiveUser();
                         changeActiveUser->act(*this);
-                        delete  changeActiveUser;
                     }
                     else if(theAct=="deleteuser" && this->isValid(info)){
                         this->action=info;
                         DeleteUser* deleteUser=new DeleteUser();
                         deleteUser->act(*this);
-                        delete deleteUser;
                     }
                     else if(theAct=="watch" && this->isNumber(info))
                     {
@@ -105,7 +99,6 @@ void Session::start() {
                             this->action = info;
                             Watch *watch = new Watch();
                             watch->act(*this);
-                            delete watch;
                         }
                         else
                             cout << "Invalid input, try again";
@@ -126,14 +119,12 @@ void Session::start() {
                         CreateUser* createUser=new CreateUser();
                         createUser->act(*this);
                         cout << createUser->toString();
-                        delete createUser;
                     }
                     else if(theAct=="dupuser"){
                         this->action=info;
                         DuplicateUser* duplicateUser=new DuplicateUser();
                         duplicateUser->act(*this);
                         cout<<duplicateUser->toString();
-                        delete duplicateUser;
                     }
                     else
                         cout << "Invalid input, try again";
@@ -275,7 +266,7 @@ Session &Session::operator=(const Session &) {
 }
 
 Session::Session(const Session &) {
-
+    
 }
 
 void Session::addActionString(const string &action) {
