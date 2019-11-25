@@ -54,22 +54,18 @@ void Session::start() {
                 if (command == "exit") {
                     Exit *exit = new Exit();
                     exit->act(*this);
-                    delete exit;
                 }
                 else if (command == "log") {
                     PrintActionsLog *printActionsLog = new PrintActionsLog();
                     printActionsLog->act(*this);
-                    delete printActionsLog;
                 }
                 else if (command == "watchhist") {
                     PrintWatchHistory *printWatchHistory = new PrintWatchHistory();
                     printWatchHistory->act(*this);
-                    delete printWatchHistory;
                 }
                 else if (command == "content") {
                     PrintContentList *printContentList = new PrintContentList();
                     printContentList->act(*this);
-                    delete printContentList;
                 }
                 else
                     cout << "Invalid input, try again";
@@ -88,13 +84,13 @@ void Session::start() {
                         this->action=info;
                         ChangeActiveUser* changeActiveUser=new ChangeActiveUser();
                         changeActiveUser->act(*this);
-                        delete  changeActiveUser;
+                        cout<<changeActiveUser->toString();
                     }
                     else if(theAct=="deleteuser" && this->isValid(info)){
                         this->action=info;
                         DeleteUser* deleteUser=new DeleteUser();
                         deleteUser->act(*this);
-                        delete deleteUser;
+                        cout<<deleteUser->toString();
                     }
                     else if(theAct=="watch" && this->isNumber(info))
                     {
@@ -105,7 +101,7 @@ void Session::start() {
                             this->action = info;
                             Watch *watch = new Watch();
                             watch->act(*this);
-                            delete watch;
+                            cout<<watch->toString();
                         }
                         else
                             cout << "Invalid input, try again";
@@ -126,13 +122,12 @@ void Session::start() {
                         CreateUser* createUser=new CreateUser();
                         createUser->act(*this);
                         cout << createUser->toString();
-                        delete createUser;
                     }
                     else if(theAct=="dupuser"){
                         this->action=info;
                         DuplicateUser* duplicateUser=new DuplicateUser();
                         duplicateUser->act(*this);
-                        delete duplicateUser;
+                        cout<<duplicateUser->toString();
                     }
                     else
                         cout << "Invalid input, try again";
@@ -158,13 +153,13 @@ Session::~Session() {
     for (auto & i : this->actionsLog)
         delete i;
     for(auto & x:this->userMap)
-        delete x.second;
-    //delete active user
+        delete getUser(x.second->getName());
+    //delete active user - included in userMap Already
 
 
 }
 
-User * Session::getActiveUser() {
+User * Session::getActiveUser() const {
     return activeUser;
 }
 
@@ -185,14 +180,14 @@ string Session::getAction() {
 }
 
 //add user to the userMap
-void Session::addUser(string name, User* user) {
+void Session::addUser(const string& name, User* user) {
     this->userMap.insert({name,user});
 }
 void Session::addAction(BaseAction * baseAction) {
     this->actionsLog.push_back(baseAction);
 }
 
-User *Session::getUser(const string& userName) {
+User *Session::getUser(const string& userName) const {
     for(auto & i : this->userMap) {
         if (i.second->getName() == userName)
             return i.second;
@@ -205,10 +200,11 @@ void Session::setNewActiveUser(User * user) {
 }
 
 void Session::deleteUser(const string& userName) {
-    for(auto & i : this->userMap) {
+    delete getUser(userName);
+    for(auto  &i : this->userMap) {
         if (i.second->getName() == userName) {
-            delete i.second; //delete the user
             userMap.erase(userMap.find(i.first));
+            break;
         }
     }
 }
@@ -218,7 +214,7 @@ int Session::contentSize() {
 }
 
 
-std::vector<BaseAction *> &Session::getActionLog() {
+std::vector<BaseAction *>&Session::getActionLog() {
     return actionsLog;
 }
 
@@ -264,14 +260,35 @@ bool Session::isNumber(const string& str)
     }
 }
 
-Session &Session::operator=(Session &&) {
+Session &Session::operator=(Session && other) { //move assignment operator
     return *this;
 }
 
-Session &Session::operator=(const Session &) {
+Session &Session::operator=(const Session & other) {
     return *this;
 }
 
-Session::Session(const Session &) {
+Session::Session(const Session & other) { //copy constructor
+    //active user
+    this->activeUser=other.getActiveUser()->clone();
+    //run
+    this->continueToRun= true;
+    // action - no need
+    //content:
+    for(auto  i : other.content) {
+        this->content.push_back(i->clone());
+    }
+    // user map
+    for(auto  i : other.userMap) {
+        this->userMap.insert({i.first,i.second->clone()}); //second needs clone
+    }
+    //action log ?
+    for(auto  i : other.actionsLog) {
+        this->actionsLog.push_back(i->clone());
+    }
+}
+
+Session::Session(Session &&) { //move constructor
 
 }
+

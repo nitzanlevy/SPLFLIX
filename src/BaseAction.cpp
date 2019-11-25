@@ -19,7 +19,7 @@ void BaseAction ::complete() {
 }
 
 void BaseAction::error(const std::string &errorMsg) {
-    status=ERROR;
+    this->status=ERROR;
     this->errorMsg=errorMsg;
 }
 
@@ -60,6 +60,11 @@ std::string BaseAction::getStatusString() const {
     return "Error";
 }
 
+void BaseAction::copy_from(BaseAction* toCopy) {
+    this->status=toCopy->status;
+    this->errorMsg=toCopy->errorMsg;
+}
+
 //CreateUser
 void CreateUser::act(Session &sess) {
     sess.addAction(this); //push the action with pending status
@@ -97,6 +102,10 @@ std::string CreateUser::toString() const {
     return "CreateUser: "+getStatusString() + this->getErrorMsg();
 }
 
+BaseAction *CreateUser::clone() const {
+    return new CreateUser();
+}
+
 //Watch- ******need to fix this function.******
 void Watch::act(Session &sess) {
     //watch - now recommend
@@ -118,13 +127,23 @@ void Watch::act(Session &sess) {
     }
     else
         watchable=sess.getActiveUser()->getRecommendation(sess);
-
+    this->complete();
     std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
+    string command;
+    getline(std::cin, command);
+    if(command=="y") {
+        sess.setAction(std::to_string(watchable->getId()));
+        this->act(sess);
+    }
     //Remmember to delete!!!
 }
 
 std::string Watch::toString() const {
     return "Watching: "+getStatusString()+ this->getErrorMsg();
+}
+
+BaseAction *Watch::clone() const {
+    return new Watch();
 }
 
 //Change User
@@ -141,6 +160,10 @@ void ChangeActiveUser::act(Session &sess) {
 
 std::string ChangeActiveUser::toString() const {
     return "Change Active User: "+getStatusString()+ this->getErrorMsg();
+}
+
+BaseAction *ChangeActiveUser::clone() const {
+    return new ChangeActiveUser();
 }
 //end Change User
 
@@ -159,6 +182,10 @@ void DeleteUser::act(Session &sess) {
 std::string DeleteUser::toString() const {
     return "Delete user: "+ getStatusString()+ this->getErrorMsg();
 }
+
+BaseAction *DeleteUser::clone() const {
+    return new DeleteUser();
+}
 //End Delete User
 
 //Duplicate User
@@ -168,31 +195,12 @@ void DuplicateUser::act(Session &sess) {
     if(action.find(" ")!=-1) {
         string existingUser = action.substr(0, action.find(" "));
         string newOne = action.substr(action.find(" ") + 1, action.length());
-
-        if (sess.getUser(existingUser)) {
-            //learn how to know user type
-            LengthRecommenderUser *user = dynamic_cast<LengthRecommenderUser *>(sess.getUser(existingUser));
-            RerunRecommenderUser *user2 = dynamic_cast<RerunRecommenderUser *>(sess.getUser(existingUser));
-            GenreRecommenderUser *user3 = dynamic_cast<GenreRecommenderUser *>(sess.getUser(existingUser));
-            //use instanceOf
-            if (user) {
-                LengthRecommenderUser *newUser= new LengthRecommenderUser(newOne);
-                newUser->operator=(*(dynamic_cast<LengthRecommenderUser*>(sess.getUser(existingUser))));
-                sess.addUser(newOne,newUser);
-            }
-            if (user2) {
-                RerunRecommenderUser *newUser = new RerunRecommenderUser(newOne);
-                newUser->operator=(*(dynamic_cast<RerunRecommenderUser*>(sess.getUser(existingUser))));
-                sess.addUser(newOne,newUser);
-            }
-            if (user3) {
-                GenreRecommenderUser *newUser = new GenreRecommenderUser(newOne);
-                newUser->operator=(*(dynamic_cast<GenreRecommenderUser*>(sess.getUser(existingUser))));
-                sess.addUser(newOne,newUser);
-            }
-            delete user; //CareFull!
-            delete user2;
-            delete user3;
+        if (sess.userExist(newOne))
+            error("user already exists");
+        else if (sess.getUser(existingUser)) {
+            User *newUser=sess.getUser(existingUser)->clone();
+            newUser->setName(newOne);
+            sess.addUser(newUser->getName(),newUser);
             this->complete();
         } else {
             error("User not exists");
@@ -202,6 +210,10 @@ void DuplicateUser::act(Session &sess) {
 }
 std::string DuplicateUser::toString() const {
     return "Duplicate User: "+ getStatusString()+ this->getErrorMsg();
+}
+
+BaseAction *DuplicateUser::clone() const {
+    return new DuplicateUser();
 }
 //end Duplicate user
 
@@ -214,35 +226,48 @@ void PrintContentList::act(Session &sess) {
     this->complete();
 }
 std::string PrintContentList::toString() const {
-    return "Print Content List: " + getStatusString()+ this->getErrorMsg();
+    return "Print Content List: " + getStatusString()+ this->getErrorMsg()+",";
+}
+
+BaseAction *PrintContentList::clone() const {
+    return new PrintContentList();
 }
 //end print content list
 
 //print watch history
 void PrintWatchHistory::act(Session &sess) {
     sess.addAction(this);
-    std::cout<< "Watch history for:"+sess.getActiveUser()->getName();
+    std::cout<< "Watch history for:"+sess.getActiveUser()->getName() <<std::endl;
     for(auto & i : sess.getActiveUser()->getHistory()) {
         std::cout << i->toString();
     }
     this->complete();
 }
 std::string PrintWatchHistory::toString() const {
-    return "Print Watch History: " + getStatusString()+ this->getErrorMsg();
+    return "Print Watch History: " + getStatusString()+ this->getErrorMsg()+",";
+}
+
+BaseAction *PrintWatchHistory::clone() const {
+    return new PrintWatchHistory();
 }
 //end of print watch history
 
 //print action log
 void PrintActionsLog::act(Session &sess) {
     sess.addAction(this);
-    for (int i = sess.getActionLog().size()-1; i >=0 ; --i) {
-        std::cout<<sess.getActionLog().at(i)->toString();
+    for (int i = sess.getActionLog().size()-1; i >=0 ; i=i-1) {
+        BaseAction *action = sess.getActionLog().at(i);
+        std::cout << action->toString() << std::endl;
     }
     this->complete();
 }
 
 std::string PrintActionsLog::toString() const {
-    return "Print Action log: " + getStatusString()+ this->getErrorMsg();
+    return "Print Action log: " + getStatusString()+ this->getErrorMsg()+",";
+}
+
+BaseAction *PrintActionsLog::clone() const {
+    return new PrintActionsLog();
 }
 //end of print action log
 
@@ -255,4 +280,9 @@ void Exit::act(Session &sess) {
 std::string Exit::toString() const {
     return "Exit: " + getStatusString()+ this->getErrorMsg();
 }
+
+BaseAction *Exit::clone() const {
+    return new Exit();
+}
+
 //end of exit

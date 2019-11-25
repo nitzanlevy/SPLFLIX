@@ -20,13 +20,14 @@ std::string Watchable::toString() const {
     return s;
 }
 
-int Watchable::getId() {
+int Watchable::getId() const {
     return id;
 }
 
-std::vector<std::string> &Watchable::getTags() {
+const std::vector<string> Watchable::getTags() const {
     return tags;
 }
+
 //end of watchable methods
 
 //start Movie methods
@@ -44,6 +45,10 @@ Watchable* Movie::getNextWatchable(Session & session) const {
 
 std::string Movie::toString() const {
     return Watchable::toString() + ", The name is: "+ name + "\n";
+}
+
+Watchable *Movie::clone() const {
+    return new Movie(getId(),name,getLength(),getTags());
 }
 //end movie methods
 
@@ -80,9 +85,9 @@ std::string Episode::getName() {
     return seriesName;
 }
 
-
-
-
+Watchable *Episode::clone() const {
+    return new Episode(getId(),seriesName,getLength(),season,episode,getTags());
+}
 
 //end episode methods
 

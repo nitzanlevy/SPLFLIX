@@ -6,16 +6,21 @@
 
 
 class Session;
+struct clonable {
+    virtual ~clonable() = default;
+    virtual clonable* clone() const = 0;
+};
 
-class Watchable{
+class Watchable :public clonable{
 public:
     Watchable(long id, int length, const std::vector<std::string>& tags);
     virtual ~Watchable();
     virtual std::string toString() const = 0;
     virtual Watchable* getNextWatchable(Session&) const = 0;
     virtual int getLength() const; // added to use recommendation algorithms
-    int getId();//added
-    std::vector<std::string>&getTags();
+    int getId() const ;//added
+    const std::vector<std::string> getTags() const ;
+    virtual Watchable * clone() const=0 ;
 private:
     const long id;
     int length;
@@ -28,6 +33,7 @@ public:
     virtual ~Movie();
     virtual std::string toString() const;
     virtual Watchable* getNextWatchable(Session&) const;
+    virtual Watchable *clone() const ;
 private:
     std::string name;
 };
@@ -40,6 +46,8 @@ public:
     virtual std::string toString() const;
     virtual Watchable* getNextWatchable(Session&) const;
     std::string getName(); //added
+    virtual Watchable *clone() const ;
+    Episode copy_me(Episode);
 private:
     std::string seriesName;
     int season;
