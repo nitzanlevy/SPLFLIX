@@ -84,11 +84,13 @@ void Session::start() {
                         this->action=info;
                         ChangeActiveUser* changeActiveUser=new ChangeActiveUser();
                         changeActiveUser->act(*this);
+                        cout<<changeActiveUser->toString();
                     }
                     else if(theAct=="deleteuser" && this->isValid(info)){
                         this->action=info;
                         DeleteUser* deleteUser=new DeleteUser();
                         deleteUser->act(*this);
+                        cout<<deleteUser->toString();
                     }
                     else if(theAct=="watch" && this->isNumber(info))
                     {
@@ -99,6 +101,7 @@ void Session::start() {
                             this->action = info;
                             Watch *watch = new Watch();
                             watch->act(*this);
+                            cout<<watch->toString();
                         }
                         else
                             cout << "Invalid input, try again";
@@ -267,29 +270,21 @@ Session &Session::operator=(const Session & other) {
 
 Session::Session(const Session & other) { //copy constructor
     //active user
-    LengthRecommenderUser* length= dynamic_cast<LengthRecommenderUser*>(other.getActiveUser());
-    GenreRecommenderUser* genre= dynamic_cast<GenreRecommenderUser*>(other.getActiveUser());
-    RerunRecommenderUser* rerun= dynamic_cast<RerunRecommenderUser*>(other.getActiveUser());
-    if (length)
-        this->activeUser=new LengthRecommenderUser(*other.getActiveUser());
-    if (genre)
-        this->activeUser=new GenreRecommenderUser(*other.getActiveUser());
-    if (rerun)
-        this->activeUser=new RerunRecommenderUser(*other.getActiveUser());
+    this->activeUser=other.getActiveUser()->clone();
     //run
     this->continueToRun= true;
     // action - no need
     //content:
     for(auto  i : other.content) {
-        this->content.push_back(i);
+        this->content.push_back(i->clone());
     }
     // user map
     for(auto  i : other.userMap) {
-        this->userMap.insert(i);
+        this->userMap.insert({i.first,i.second->clone()}); //second needs clone
     }
     //action log ?
     for(auto  i : other.actionsLog) {
-        this->actionsLog.push_back(i);
+        this->actionsLog.push_back(i->clone());
     }
 }
 

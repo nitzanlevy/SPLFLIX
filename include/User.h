@@ -5,10 +5,12 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include "Watchable.h"
+
 class Watchable;
 class Session;
 
-class User{ //should implement rule of five
+class User : public clonable{ //should implement rule of five
 public:
     User(const std::string& name); //constructor
     virtual ~User(); //destructor
@@ -24,6 +26,7 @@ public:
     User &operator=(User &&); //move assignment operator
     void addToHistory( Watchable* watch);
     void setName(std::string);
+    virtual User * clone() const=0;
 protected:
     std::vector<Watchable*> history;
 private:
@@ -34,7 +37,7 @@ private:
 
 class LengthRecommenderUser : public User {
 public:
-    LengthRecommenderUser(const User &);
+    virtual User * clone() const;
     LengthRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
 private:
@@ -42,7 +45,7 @@ private:
 
 class RerunRecommenderUser : public User {
 public:
-    RerunRecommenderUser(const User &);
+    virtual User * clone() const;
     RerunRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
 private:
@@ -51,7 +54,7 @@ private:
 
 class GenreRecommenderUser : public User {
 public:
-    GenreRecommenderUser(const User &);
+    virtual User * clone() const;
     GenreRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
 private:

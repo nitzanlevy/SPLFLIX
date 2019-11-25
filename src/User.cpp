@@ -25,7 +25,8 @@ User::~User() { //delete history pointers, destructor
 
 User::User(const User & user) { //copy constructor
     for(auto  i : user.history) //possible &
-        history.push_back(i);
+        history.push_back(i->clone());
+    this->name=user.name; // careful!!
 }
 
 User &User::operator=(const User & user) { //copy assignment operator
@@ -112,8 +113,9 @@ Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
         return nullptr;
 }
 
-LengthRecommenderUser::LengthRecommenderUser(const User & user) : User(user){
-
+User *LengthRecommenderUser::clone() const {
+    LengthRecommenderUser *newUSer=new LengthRecommenderUser(*this);
+    return newUSer;
 }
 
 
@@ -133,8 +135,11 @@ Watchable* RerunRecommenderUser::getRecommendation(Session &s) {
     return this->history[(indexOfLastRecommendation+1)%getHistorySize()];
 }
 
-RerunRecommenderUser::RerunRecommenderUser(const User & user) : User(user){
 
+
+User *RerunRecommenderUser::clone() const {
+    RerunRecommenderUser *newUser=new RerunRecommenderUser(*this);
+    return newUser;
 }
 
 //GenreRecommenderUser functions
@@ -157,8 +162,10 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
     return nullptr;
 }
 
-GenreRecommenderUser::GenreRecommenderUser(const User & user) : User(user){
 
+User *GenreRecommenderUser::clone() const {
+    GenreRecommenderUser *newUser=new GenreRecommenderUser(*this);
+    return newUser;
 }
 
 
