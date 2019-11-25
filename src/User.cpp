@@ -149,17 +149,49 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
         return nullptr;
     } //there is no genre to match to.
     unordered_map<string, int>* freq=new unordered_map<string,int >();
-    /*for (auto &i :this->history) {
+    for (auto &i :this->history) {
         for (auto &j:i->getTags()) {
-            if (freq->find(j)=!freq->end()){
-
+            if (freq->find(j)!=freq->end()){
+                freq->find(j)->second++;
             }
             else{
-
+                freq->insert({j,1});
             }
         }
-    }*/
-    return nullptr;
+    }
+    bool found= false;
+    int maxTag=0;
+    string mostTag="";
+    Watchable *output;
+    while(!found) {
+        for (auto &i : *freq) {
+            if (i.second > maxTag)
+                mostTag = i.first;
+        }
+        for ( auto &i : s.getContent()) {
+            if(!found) {
+                bool flag = false;
+                for (auto &j : this->history) {
+                    if (i == j) {
+                        flag = true;
+                        break;
+                    }
+                }
+                for (int k = 0; k < i->getTags().size() && !flag; k++) {
+                    if (i->getTags().at(k) == mostTag) {
+                        output = i;
+                        found = true;
+                    }
+                }
+            } else break;
+        }
+        if(!found) {
+            freq->erase(freq->find(mostTag));
+            maxTag=0;
+        }
+    }
+    delete freq;
+    return output;
 }
 
 
