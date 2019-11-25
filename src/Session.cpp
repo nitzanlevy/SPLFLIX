@@ -186,7 +186,7 @@ string Session::getAction() {
 }
 
 //add user to the userMap
-void Session::addUser(string name, User* user) {
+void Session::addUser(const string& name, User* user) {
     this->userMap.insert({name,user});
 }
 void Session::addAction(BaseAction * baseAction) {
@@ -206,10 +206,11 @@ void Session::setNewActiveUser(User * user) {
 }
 
 void Session::deleteUser(const string& userName) {
-    for(auto & i : this->userMap) {
+    delete getUser(userName);
+    for(auto  &i : this->userMap) {
         if (i.second->getName() == userName) {
-            delete i.second; //delete the user
             userMap.erase(userMap.find(i.first));
+            break;
         }
     }
 }
@@ -219,7 +220,7 @@ int Session::contentSize() {
 }
 
 
-std::vector<BaseAction *> &Session::getActionLog() {
+std::vector<BaseAction *>&Session::getActionLog() {
     return actionsLog;
 }
 
@@ -276,3 +277,12 @@ Session &Session::operator=(const Session &) {
 Session::Session(const Session &) {
 
 }
+
+void Session::addActionString(const string &action) {
+    logString.push_back(action);
+}
+
+std::vector<std::string> &Session::getLogString() {
+    return logString;
+}
+

@@ -21,7 +21,7 @@ public:
     User * getActiveUser(); //added to get recommendation
     std::vector<Watchable*>& getContent();// added
     Watchable * getWatchable(int watchId);// added
-    void addUser(string,User*);//added
+    void addUser(const string&,User*);//added
     string getAction();//added
     void addAction(BaseAction*);//added
     User* getUser(const string& userName);
@@ -32,7 +32,8 @@ public:
     void stopRunning();
     int contentSize();// added
     bool userExist(const string& userName);
-
+    void addActionString(const string & action);
+    std::vector<std::string> &getLogString();
 private:
     bool isNumber(const string& check);
     bool isValid(const string& check);
@@ -41,6 +42,7 @@ private:
     std::unordered_map<std::string,User*> userMap;
     User* activeUser;
     string action; //added
-    bool continueToRun;
+    bool continueToRun; //added
+    std::vector<std::string> logString;
 };
 #endif

@@ -19,7 +19,7 @@ void BaseAction ::complete() {
 }
 
 void BaseAction::error(const std::string &errorMsg) {
-    status=ERROR;
+    this->status=ERROR;
     this->errorMsg=errorMsg;
 }
 
@@ -118,7 +118,8 @@ void Watch::act(Session &sess) {
     }
     else
         watchable=sess.getActiveUser()->getRecommendation(sess);
-
+    this->complete();
+    //sess.addActionString(this->toString());
     std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
     string command;
     getline(std::cin, command);
@@ -221,35 +222,39 @@ void PrintContentList::act(Session &sess) {
     this->complete();
 }
 std::string PrintContentList::toString() const {
-    return "Print Content List: " + getStatusString()+ this->getErrorMsg();
+    return "Print Content List: " + getStatusString()+ this->getErrorMsg()+",";
 }
 //end print content list
 
 //print watch history
 void PrintWatchHistory::act(Session &sess) {
     sess.addAction(this);
-    std::cout<< "Watch history for:"+sess.getActiveUser()->getName();
+    std::cout<< "Watch history for:"+sess.getActiveUser()->getName() <<std::endl;
     for(auto & i : sess.getActiveUser()->getHistory()) {
         std::cout << i->toString();
     }
     this->complete();
 }
 std::string PrintWatchHistory::toString() const {
-    return "Print Watch History: " + getStatusString()+ this->getErrorMsg();
+    return "Print Watch History: " + getStatusString()+ this->getErrorMsg()+",";
 }
 //end of print watch history
 
 //print action log
 void PrintActionsLog::act(Session &sess) {
     sess.addAction(this);
-    for (int i = sess.getActionLog().size()-1; i >=0 ; --i) {
-        std::cout<<sess.getActionLog().at(i)->toString();
+    for (int i = sess.getActionLog().size()-1; i >=0 ; i=i-1) {
+        BaseAction *action = sess.getActionLog().at(i);
+        std::cout << action->toString() << std::endl;
     }
+    /*for (auto& item:sess.getLogString()) {
+        std::cout<<item;
+    }*/
     this->complete();
 }
 
 std::string PrintActionsLog::toString() const {
-    return "Print Action log: " + getStatusString()+ this->getErrorMsg();
+    return "Print Action log: " + getStatusString()+ this->getErrorMsg()+",";
 }
 //end of print action log
 
