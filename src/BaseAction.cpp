@@ -183,18 +183,21 @@ void DuplicateUser::act(Session &sess) {
             GenreRecommenderUser *user3 = dynamic_cast<GenreRecommenderUser *>(sess.getUser(existingUser));
             //use instanceOf
             if (user) {
-                LengthRecommenderUser *newUser= new LengthRecommenderUser(newOne);
-                newUser->operator=(*(dynamic_cast<LengthRecommenderUser*>(sess.getUser(existingUser))));
+                LengthRecommenderUser *newUser= new LengthRecommenderUser(*sess.getUser(existingUser));
+                newUser->setName(newOne);
+                //newUser->operator=(*(dynamic_cast<LengthRecommenderUser*>()));
                 sess.addUser(newOne,newUser);
             }
             if (user2) {
-                RerunRecommenderUser *newUser = new RerunRecommenderUser(newOne);
-                newUser->operator=(*(dynamic_cast<RerunRecommenderUser*>(sess.getUser(existingUser))));
+                RerunRecommenderUser *newUser = new RerunRecommenderUser(*sess.getUser(existingUser));
+                newUser->setName(newOne);
+                //newUser->operator=(*(dynamic_cast<RerunRecommenderUser*>(sess.getUser(existingUser))));
                 sess.addUser(newOne,newUser);
             }
             if (user3) {
-                GenreRecommenderUser *newUser = new GenreRecommenderUser(newOne);
-                newUser->operator=(*(dynamic_cast<GenreRecommenderUser*>(sess.getUser(existingUser))));
+                GenreRecommenderUser *newUser = new GenreRecommenderUser(*sess.getUser(existingUser));
+                newUser->setName(newOne);
+                //newUser->operator=(*(dynamic_cast<GenreRecommenderUser*>(sess.getUser(existingUser))));
                 sess.addUser(newOne,newUser);
             }
             //delete user; //CareFull!

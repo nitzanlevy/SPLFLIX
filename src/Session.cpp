@@ -150,13 +150,13 @@ Session::~Session() {
     for (auto & i : this->actionsLog)
         delete i;
     for(auto & x:this->userMap)
-        delete x.second;
-    //delete active user
+        delete getUser(x.second->getName());
+    //delete active user - included in userMap Already
 
 
 }
 
-User * Session::getActiveUser() {
+User * Session::getActiveUser() const {
     return activeUser;
 }
 
@@ -184,7 +184,7 @@ void Session::addAction(BaseAction * baseAction) {
     this->actionsLog.push_back(baseAction);
 }
 
-User *Session::getUser(const string& userName) {
+User *Session::getUser(const string& userName) const {
     for(auto & i : this->userMap) {
         if (i.second->getName() == userName)
             return i.second;
@@ -257,15 +257,43 @@ bool Session::isNumber(const string& str)
     }
 }
 
-Session &Session::operator=(Session &&) {
+Session &Session::operator=(Session && other) { //move assignment operator
     return *this;
 }
 
-Session &Session::operator=(const Session &) {
+Session &Session::operator=(const Session & other) {
     return *this;
 }
 
-Session::Session(const Session &) {
+Session::Session(const Session & other) { //copy constructor
+    //active user
+    LengthRecommenderUser* length= dynamic_cast<LengthRecommenderUser*>(other.getActiveUser());
+    GenreRecommenderUser* genre= dynamic_cast<GenreRecommenderUser*>(other.getActiveUser());
+    RerunRecommenderUser* rerun= dynamic_cast<RerunRecommenderUser*>(other.getActiveUser());
+    if (length)
+        this->activeUser=new LengthRecommenderUser(*other.getActiveUser());
+    if (genre)
+        this->activeUser=new GenreRecommenderUser(*other.getActiveUser());
+    if (rerun)
+        this->activeUser=new RerunRecommenderUser(*other.getActiveUser());
+    //run
+    this->continueToRun= true;
+    // action - no need
+    //content:
+    for(auto  i : other.content) {
+        this->content.push_back(i);
+    }
+    // user map
+    for(auto  i : other.userMap) {
+        this->userMap.insert(i);
+    }
+    //action log ?
+    for(auto  i : other.actionsLog) {
+        this->actionsLog.push_back(i);
+    }
+}
+
+Session::Session(Session &&) { //move constructor
 
 }
 

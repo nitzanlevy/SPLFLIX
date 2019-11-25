@@ -23,17 +23,18 @@ public:
     User (User &&); //move assignment constructor
     User &operator=(User &&); //move assignment operator
     void addToHistory( Watchable* watch);
-
+    void setName(std::string);
 protected:
     std::vector<Watchable*> history;
 private:
-    const std::string name;
+    std::string name;
 
 };
 
 
 class LengthRecommenderUser : public User {
 public:
+    LengthRecommenderUser(const User &);
     LengthRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
 private:
@@ -41,6 +42,7 @@ private:
 
 class RerunRecommenderUser : public User {
 public:
+    RerunRecommenderUser(const User &);
     RerunRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
 private:
@@ -49,6 +51,7 @@ private:
 
 class GenreRecommenderUser : public User {
 public:
+    GenreRecommenderUser(const User &);
     GenreRecommenderUser(const std::string& name);
     virtual Watchable* getRecommendation(Session& s);
 private:

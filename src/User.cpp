@@ -16,18 +16,19 @@ std::string User::getName() const {
     return name;
 }
 
-User::~User() { //delete history pointers
+User::~User() { //delete history pointers, destructor
     for(auto & i : this->history) {
         delete i;
     } //delete all pointers
 
 }
 
-User::User(const User & user) {
-    this->history=user.history;
+User::User(const User & user) { //copy constructor
+    for(auto  i : user.history) //possible &
+        history.push_back(i);
 }
 
-User &User::operator=(const User & user) {
+User &User::operator=(const User & user) { //copy assignment operator
     if (this == &user) {  //check for "self assignment"
         return *this;
     }
@@ -54,7 +55,7 @@ std::vector<Watchable *> &User::getHistory() {
 }
 
 
-User::User(User && other) {
+User::User(User && other) { //move constructor
     for (auto &i:this->history) {
         delete i;
     } //delete user history
@@ -62,7 +63,7 @@ User::User(User && other) {
     delete &other.history;
 }
 
-User &User::operator=(User &&other) {
+User &User::operator=(User &&other) { //move assignment operator
     for (auto &i:this->history) {
         delete i;
     } //delete user history
@@ -73,6 +74,10 @@ User &User::operator=(User &&other) {
 void User::addToHistory(Watchable* watch) {
     this->history.push_back(watch);
 
+}
+
+void User::setName(std::string newName) {
+    this->name=newName;
 }
 
 //LengthRecommenderUser functions
@@ -107,6 +112,11 @@ Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
         return nullptr;
 }
 
+LengthRecommenderUser::LengthRecommenderUser(const User & user) : User(user){
+
+}
+
+
 //RerunRecommenderUser functions
 RerunRecommenderUser::RerunRecommenderUser(const std::string &name): User(name) {
     indexOfLastRecommendation=-1; //indexes that nothing had been recommended yet
@@ -121,6 +131,10 @@ Watchable* RerunRecommenderUser::getRecommendation(Session &s) {
         return this->history[indexOfLastRecommendation];
     }
     return this->history[(indexOfLastRecommendation+1)%getHistorySize()];
+}
+
+RerunRecommenderUser::RerunRecommenderUser(const User & user) : User(user){
+
 }
 
 //GenreRecommenderUser functions
@@ -141,6 +155,10 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
         }
     }*/
     return nullptr;
+}
+
+GenreRecommenderUser::GenreRecommenderUser(const User & user) : User(user){
+
 }
 
 
