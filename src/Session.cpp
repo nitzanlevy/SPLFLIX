@@ -266,14 +266,6 @@ Session &Session::operator=(const Session &) {
 }
 
 Session::Session(const Session &) {
-    
-}
 
-void Session::addActionString(const string &action) {
-    logString.push_back(action);
-}
-
-std::vector<std::string> &Session::getLogString() {
-    return logString;
 }
 

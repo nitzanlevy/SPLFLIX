@@ -32,8 +32,6 @@ public:
     void stopRunning();
     int contentSize();// added
     bool userExist(const string& userName);
-    void addActionString(const string & action);
-    std::vector<std::string> &getLogString();
 private:
     bool isNumber(const string& check);
     bool isValid(const string& check);
@@ -43,6 +41,5 @@ private:
     User* activeUser;
     string action; //added
     bool continueToRun; //added
-    std::vector<std::string> logString;
 };
 #endif

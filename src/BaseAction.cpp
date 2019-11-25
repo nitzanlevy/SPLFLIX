@@ -119,7 +119,6 @@ void Watch::act(Session &sess) {
     else
         watchable=sess.getActiveUser()->getRecommendation(sess);
     this->complete();
-    //sess.addActionString(this->toString());
     std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
     string command;
     getline(std::cin, command);
@@ -247,9 +246,6 @@ void PrintActionsLog::act(Session &sess) {
         BaseAction *action = sess.getActionLog().at(i);
         std::cout << action->toString() << std::endl;
     }
-    /*for (auto& item:sess.getLogString()) {
-        std::cout<<item;
-    }*/
     this->complete();
 }
 
