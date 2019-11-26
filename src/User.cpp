@@ -16,11 +16,11 @@ std::string User::getName() const {
     return name;
 }
 
-User::~User() { //delete history pointers, destructor
+User::~User() { //null history pointers, destructor
     for(auto & i : this->history) {
-        delete i;
-    } //delete all pointers
-    history.clear();
+        i = nullptr;
+    } //null all pointers
+    history.clear(); //clean junk values
 }
 
 User::User(const User & user) { //copy constructor

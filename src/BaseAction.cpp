@@ -122,7 +122,8 @@ void Watch::act(Session &sess) {
     getline(std::cin, command);
     if(command=="y") {
         sess.setAction(std::to_string(watchable->getId()));
-        this->act(sess);
+        Watch *watch = new Watch();
+        watch->act(sess);
     }
     //Remmember to delete!!!
 }

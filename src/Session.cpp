@@ -155,7 +155,7 @@ Session::~Session() {
     for (auto & i : this->actionsLog)
         delete i;
     for(auto & x:this->userMap)
-        delete getUser(x.second->getName());
+        delete x.second;
     this->activeUser= nullptr; //point to null after deletion
     content.clear();
     actionsLog.clear();
