@@ -10,7 +10,7 @@ using std::string;
 class User;
 class Watchable;
 
-class Session{
+class Session : public clonable{
 public:
     Session(const std::string &configFilePath); //constructor
     Session(const Session &); //Copy constructor
@@ -33,6 +33,7 @@ public:
     void stopRunning();
     int contentSize();// added
     bool userExist(const string& userName);
+    virtual Session * clone() const ;
 private:
     bool isNumber(const string& check);
     bool isValid(const string& check);
