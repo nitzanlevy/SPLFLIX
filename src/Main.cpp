@@ -9,7 +9,7 @@ int main(int argc, char** argv){
         cout << "usage splflix input_file" << endl;
         return 0;
     }*/
-    Session s("/home/nitzan/Desktop/SPLFLIX/config2.json"); //Session s(argv[1])!!!!
+    Session s("/home/amit/Desktop/SPLFLIX/config2.json"); //Session s(argv[1])!!!!
     s.start();
     return 0;
 }
