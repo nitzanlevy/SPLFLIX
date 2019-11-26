@@ -20,7 +20,7 @@ public:
     virtual int getLength() const; // added to use recommendation algorithms
     int getId() const ;//added
     const std::vector<std::string> getTags() const ;
-    virtual Watchable * clone() const=0 ;
+    virtual Watchable * clone() const=0;
     virtual bool isEpisode() const=0;
 private:
     const long id;
@@ -36,6 +36,7 @@ public:
     virtual Watchable* getNextWatchable(Session&) const;
     virtual Watchable *clone() const ;
     virtual bool isEpisode() const ;
+    std::string getName();
 private:
     std::string name;
 };
@@ -50,6 +51,9 @@ public:
     std::string getName(); //added
     virtual Watchable *clone() const ;
     virtual bool isEpisode() const;
+    std::string getNumSeason() const ;
+    std::string getNumEpisode() const ;
+
 private:
     std::string seriesName;
     int season;
