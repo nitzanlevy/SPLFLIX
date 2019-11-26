@@ -192,7 +192,7 @@ void Session::addAction(BaseAction * baseAction) {
 
 User *Session::getUser(const string& userName) const {
     for(auto & i : this->userMap) {
-        if (i.second->getName() == userName)
+        if (i.first == userName)
             return i.second;
     }
     return nullptr;
@@ -205,7 +205,7 @@ void Session::setNewActiveUser(User * user) {
 void Session::deleteUser(const string& userName) {
     delete getUser(userName);
     for(auto  &i : this->userMap) {
-        if (i.second->getName() == userName) {
+        if (i.first == userName) {
             userMap.erase(userMap.find(i.first));
             break;
         }
