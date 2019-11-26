@@ -138,36 +138,56 @@ Watchable* RerunRecommenderUser::getRecommendation(Session &s) {
 
 
 User *RerunRecommenderUser::clone() const {
-    RerunRecommenderUser *newUser=new RerunRecommenderUser(*this);
+    RerunRecommenderUser *newUser = new RerunRecommenderUser(*this);
     return newUser;
 }
-
+bool sortbyTag(const pair<string,int> &a,
+               const pair<string,int> &b)
+{
+    return (a.first < b.first);
+}
+bool isEqual(pair<string, int>& element,string tag)
+{
+    return element.first == tag;
+}
 //GenreRecommenderUser functions
 GenreRecommenderUser::GenreRecommenderUser(const std::string &name): User(name) {}
 Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
     if (getHistorySize()==0){
         return nullptr;
-    } //there is no genre to match to.
-    unordered_map<string, int>* freq=new unordered_map<string,int >();
-    for (auto &i :this->history) {
+    }
+    //insert all tags to freq
+    unordered_map<string, int> freq;
+    for (auto &i :s.getContent()) {
         for (auto &j:i->getTags()) {
-            if (freq->find(j)!=freq->end()){
-                freq->find(j)->second++;
-            }
-            else{
-                freq->insert({j,1});
+            if (freq.find(j)==freq.end()){
+                freq.insert({j,0});
             }
         }
     }
+    //count the num of tag in freq
+    for (auto &i :this->history) {
+        for (auto &j:i->getTags()) {
+            if (freq.find(j)!=freq.end()){
+                freq.find(j)->second++;
+            }
+        }
+    }
+    //vector contains all the freq elements and now sorted by string tag
+    vector<pair<string,int>> elems(freq.begin(), freq.end());
+    sort(elems.begin(), elems.end(),sortbyTag);
     bool found= false;
     int maxTag=0;
     string mostTag="";
     Watchable *output;
+    //start to search the mostTag in content
     while(!found) {
-        for (auto &i : *freq) {
+        //search the mostTag string in elems
+        for (auto &i : elems) {
             if (i.second > maxTag)
                 mostTag = i.first;
         }
+        //check in content-history for the recommendation
         for ( auto &i : s.getContent()) {
             if(!found) {
                 bool flag = false;
@@ -185,12 +205,14 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
                 }
             } else break;
         }
+        //if not matching for mostTag we search for the nextTag by deleting the mostTag from elems
         if(!found) {
-            freq->erase(freq->find(mostTag));
+            for(auto it = elems.begin(); it!=elems.end(); it++ )
+                if(it->first == mostTag)
+                    elems.erase(it);
             maxTag=0;
         }
     }
-    delete freq;
     return output;
 }
 
