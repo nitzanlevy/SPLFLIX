@@ -7,7 +7,9 @@
 //Watchable methods
 Watchable ::Watchable(long id, int length, const std::vector<std::string> &tags):id(id),length(length),tags(tags) {}//check on tags
 
-Watchable::~Watchable() {}
+Watchable::~Watchable() {
+    tags.clear();
+}
 
 int Watchable::getLength() const { return this->length;}
 

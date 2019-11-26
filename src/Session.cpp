@@ -40,7 +40,8 @@ Session::Session(const std::string &configFilePath){
 
 void Session::start() {
     std::cout<< "SPLFLIX is now on!";
-    setNewActiveUser(new LengthRecommenderUser("deafult"));
+    LengthRecommenderUser *defaultUser=new LengthRecommenderUser("default");
+    setNewActiveUser(defaultUser);
     while (continueToRun){
         cout<<""<<endl;// get down a line each time
         string command;
@@ -142,6 +143,7 @@ void Session::start() {
             getline(cin,rerun);
             if (rerun=="y")
                 continueToRun= true;
+            else delete defaultUser;
         }
     }
 }
@@ -154,9 +156,10 @@ Session::~Session() {
         delete i;
     for(auto & x:this->userMap)
         delete getUser(x.second->getName());
-    //delete active user - included in userMap Already
-
-
+    this->activeUser= nullptr; //point to null after deletion
+    content.clear();
+    actionsLog.clear();
+    userMap.clear();
 }
 
 User * Session::getActiveUser() const {

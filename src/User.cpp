@@ -20,7 +20,7 @@ User::~User() { //delete history pointers, destructor
     for(auto & i : this->history) {
         delete i;
     } //delete all pointers
-
+    history.clear();
 }
 
 User::User(const User & user) { //copy constructor
