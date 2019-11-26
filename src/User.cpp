@@ -36,10 +36,9 @@ User &User::operator=(const User & user) { //copy assignment operator
 
     for(auto & i : this->history) //destroy old list
         delete i;
-
-    for(auto  i : user.history) //possible &
-        history.push_back(i);
-
+    this->history.clear();
+    for(auto & i : user.history) //possible &
+        history.push_back(i->clone());
     return *this;
 }
 

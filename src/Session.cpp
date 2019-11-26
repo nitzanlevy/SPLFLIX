@@ -264,11 +264,67 @@ bool Session::isNumber(const string& str)
 }
 
 Session &Session::operator=(Session && other) { //move assignment operator
-    return *this;
+
+    for(auto &i:this->actionsLog){ //destroy old lists
+        delete i;
+    }
+    this->actionsLog.clear();
+    for(auto &i:this->userMap){
+        delete i.second;
+    }
+    this->userMap.clear();
+    for(auto &i:this->actionsLog){
+        delete i;
+    }
+    this->actionsLog.clear();
+    //now start moving and deleting other resources
+    this->activeUser=other.activeUser;
+    this->continueToRun=other.continueToRun;
+    //now dealing with pointers, we set this pointer to the obj, and other pointer to null.
+    for (auto &i:other.actionsLog) {
+        this->actionsLog.push_back(i);
+        i= nullptr;
+    }
+    other.actionsLog.clear(); //clean junk values
+    for (auto &i:other.userMap) {
+        this->userMap.insert(i);
+        i.second=nullptr;
+    }
+    other.userMap.clear();
+    for (auto &i:other.content) {
+        this->content.push_back(i);
+        i= nullptr;
+    }
+    other.content.clear();
 }
 
-Session &Session::operator=(const Session & other) {
-    return *this;
+Session &Session::operator=(const Session & other) { //copy assignment operator
+    if (this==&other)
+        return *this;
+    for(auto &i:this->actionsLog){ //destroy old lists
+        delete i;
+    }
+    this->actionsLog.clear();
+    for(auto &i:this->userMap){
+        delete i.second;
+    }
+    this->userMap.clear();
+    for(auto &i:this->actionsLog){
+        delete i;
+    }
+    this->actionsLog.clear();
+    //start copying from other
+    for(auto & i:other.actionsLog){
+        this->actionsLog.push_back(i->clone());
+    }
+    for(auto & i:other.content){
+        this->content.push_back(i->clone());
+    }
+    for(auto & i:other.userMap){
+        this->userMap.insert({i.first,i.second->clone()});
+    }
+    //done copying
+
 }
 
 Session::Session(const Session & other) { //copy constructor
@@ -278,20 +334,41 @@ Session::Session(const Session & other) { //copy constructor
     this->continueToRun= true;
     // action - no need
     //content:
-    for(auto  i : other.content) {
+    for(auto & i : other.content) {
         this->content.push_back(i->clone());
     }
     // user map
-    for(auto  i : other.userMap) {
+    for(auto & i : other.userMap) {
         this->userMap.insert({i.first,i.second->clone()}); //second needs clone
     }
     //action log ?
-    for(auto  i : other.actionsLog) {
+    for(auto & i : other.actionsLog) {
         this->actionsLog.push_back(i->clone());
     }
 }
 
-Session::Session(Session &&) { //move constructor
+Session::Session(Session && other){ //move constructor
+    this->activeUser=other.activeUser;
+    this->continueToRun=other.continueToRun;
+    //now dealing with pointers, we set this pointer to the obj, and other pointer to null.
+    for (auto &i:other.actionsLog) {
+        this->actionsLog.push_back(i);
+        i= nullptr;
+    }
+    other.actionsLog.clear(); //clean junk values
+    for (auto &i:other.userMap) {
+        this->userMap.insert(i);
+        i.second=nullptr;
+    }
+    other.userMap.clear();
+    for (auto &i:other.content) {
+        this->content.push_back(i);
+        i= nullptr;
+    }
+    other.content.clear();
+}
 
+Session *Session::clone() const {
+    return new Session(*this);
 }
 
