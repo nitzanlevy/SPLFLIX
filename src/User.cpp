@@ -56,19 +56,24 @@ std::vector<Watchable *> &User::getHistory() {
 
 
 User::User(User && other) { //move constructor
-    for (auto &i:this->history) {
-        delete i;
-    } //delete user history
-    this->history=other.history;
-    delete &other.history;
+    this->name=other.name;
+    for (auto &i :other.history) { //move pointer and destroy other's pointer
+        this->history.push_back(i);
+        i= nullptr;
+    }
+    other.history.clear(); //clear junk values
 }
 
 User &User::operator=(User &&other) { //move assignment operator
-    for (auto &i:this->history) {
-        delete i;
-    } //delete user history
-    this->history=other.history;
-    delete &other.history;
+    for (auto &i:this->history) { //we don't delete, it points to content values, every user shares them.
+        i= nullptr;
+    }
+    this->history.clear();//delete user history
+    for (auto &i:other.history) {
+        this->history.push_back(i);
+        i= nullptr; //detach other's resources
+    }
+    other.history.clear();
     return *this;
 }
 void User::addToHistory(Watchable* watch) {
