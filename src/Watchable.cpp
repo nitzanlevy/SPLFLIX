@@ -13,14 +13,7 @@ Watchable::~Watchable() {
 
 int Watchable::getLength() const { return this->length;}
 
-std::string Watchable::toString() const {
-   std::string s;
-   s= "The Id is: " + std::to_string(this->id) + ", The length is: " + std::to_string(this->length) + ", The tags is:" ;
-    for (int i = 0; i < tags.size(); i++) {
-        s= s + " " + tags.at(i).data();
-    }
-    return s;
-}
+std::string Watchable::toString() const {}
 
 int Watchable::getId() const {
     return id;
@@ -44,7 +37,11 @@ Watchable* Movie::getNextWatchable(Session & session) const {
 }
 
 std::string Movie::toString() const {
-    return Watchable::toString() + ", The name is: "+ name + "\n";
+    string s;
+    for(int i=0;i<this->getTags().size();i++)
+        s=s+this->getTags().at(i)+", ";
+    s=s.substr(0,s.length()-2);
+    return std::to_string(this->getId()) + ". "+ name +" "+ std::to_string(this->getLength()) +" minutes ["+s+"]" ;
 }
 
 Watchable *Movie::clone() const {
@@ -53,6 +50,10 @@ Watchable *Movie::clone() const {
 
 bool Movie::isEpisode() const {
     return false;
+}
+
+std::string Movie::getName() {
+    return this->name;
 }
 //end movie methods
 
@@ -66,7 +67,7 @@ Episode::~Episode(){}
 
 Watchable* Episode::getNextWatchable(Session & session) const {
     Watchable *nextWatchable=getNextEpisode(session);
-    if (nextWatchable->isEpisode()){
+    if (nextWatchable && nextWatchable->isEpisode()){
         if (((Episode*)nextWatchable)->seriesName==this->seriesName){
             return nextWatchable;
         }
@@ -75,7 +76,11 @@ Watchable* Episode::getNextWatchable(Session & session) const {
 } //need to check last episode
 
 std::string Episode::toString() const {
-    return Watchable::toString() + ", The season is: " + std::to_string(season) + " The episode is: " + std::to_string(episode) + ", The seriesName is: "+ seriesName;
+    string s;
+    for(int i=0;i<this->getTags().size();i++)
+        s=s+this->getTags().at(i)+", ";
+    s=s.substr(0,s.length()-2);
+    return std::to_string(this->getId()) + ". " + seriesName + " S" + std::to_string(this->season)+ "E" + std::to_string(this->episode) +" "+ std::to_string(this->getLength()) + " minutes ["+s+"]" ;
 }
 
 Watchable* Episode::getNextEpisode(Session &session) const {
@@ -98,6 +103,9 @@ Watchable *Episode::clone() const {
 bool Episode::isEpisode() const {
     return true;
 }
+
+std::string Episode::getNumSeason() const { return std::to_string(this->season);}
+std::string Episode::getNumEpisode() const { return std::to_string(this->episode);}
 
 //end episode methods
 

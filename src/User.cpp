@@ -16,16 +16,16 @@ std::string User::getName() const {
     return name;
 }
 
-User::~User() { //delete history pointers, destructor
+User::~User() { //null history pointers, destructor
     for(auto & i : this->history) {
-        delete i;
-    } //delete all pointers
-    history.clear();
+        i = nullptr;
+    } //null all pointers
+    history.clear(); //clean junk values
 }
 
 User::User(const User & user) { //copy constructor
     for(auto  i : user.history) //possible &
-        history.push_back(i->clone());
+        history.push_back(i); //pass by pointer, not deepcopy
     this->name=user.name; // careful!!
 }
 
@@ -35,10 +35,10 @@ User &User::operator=(const User & user) { //copy assignment operator
     }
 
     for(auto & i : this->history) //destroy old list
-        delete i;
+        i= nullptr;
     this->history.clear();
     for(auto & i : user.history) //possible &
-        history.push_back(i->clone());
+        history.push_back(i);
     return *this;
 }
 
@@ -101,7 +101,7 @@ Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
         for(auto & i : s.getContent()) {
             bool flag= false;
             for(auto & j : this->history) {
-                if (i==j){
+                if (i->toString()==j->toString()){
                     flag= true;
                     break;
                 }

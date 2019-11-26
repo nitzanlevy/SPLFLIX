@@ -16,7 +16,7 @@ Session::Session(const std::string &configFilePath){
     std::ifstream i(configFilePath);
     json j;
     i>>j;
-    int id=0;
+    int id=1;
     json movies=j["movies"];
     for (int k = 0; k <movies.size() ; k++) {
         json & js=movies[k];
@@ -30,7 +30,7 @@ Session::Session(const std::string &configFilePath){
         json & seas=jt["seasons"]; // num Of Seasons
         for (int i = 0; i < seas.size(); ++i) {
             for (int l = 0; l <seas[i] ; ++l) {
-                content.push_back(new Episode(id,jt["name"],jt["episode_length"],i,l,jt["tags"]));
+                content.push_back(new Episode(id,jt["name"],jt["episode_length"],i+1,l+1,jt["tags"]));
                 id++;
             }
         }
@@ -85,24 +85,24 @@ void Session::start() {
                         this->action=info;
                         ChangeActiveUser* changeActiveUser=new ChangeActiveUser();
                         changeActiveUser->act(*this);
-                        cout<<changeActiveUser->toString();
+                        //cout<<changeActiveUser->toString();
                     }
                     else if(theAct=="deleteuser" && this->isValid(info)){
                         this->action=info;
                         DeleteUser* deleteUser=new DeleteUser();
                         deleteUser->act(*this);
-                        cout<<deleteUser->toString();
+                        //cout<<deleteUser->toString();
                     }
                     else if(theAct=="watch" && this->isNumber(info))
                     {
                         std::stringstream geek(info);
                         int id;
                         geek>>id;
-                        if(id < this->content.size()) {
+                        if( 0 < id && id <= this->content.size()) {
                             this->action = info;
                             Watch *watch = new Watch();
                             watch->act(*this);
-                            cout<<watch->toString();
+                            //cout<<watch->toString();
                         }
                         else
                             cout << "Invalid input, try again";
@@ -122,13 +122,13 @@ void Session::start() {
                         this->action=info;
                         CreateUser* createUser=new CreateUser();
                         createUser->act(*this);
-                        cout << createUser->toString();
+                        //cout << createUser->toString();
                     }
                     else if(theAct=="dupuser"){
                         this->action=info;
                         DuplicateUser* duplicateUser=new DuplicateUser();
                         duplicateUser->act(*this);
-                        cout<<duplicateUser->toString();
+                        //cout<<duplicateUser->toString();
                     }
                     else
                         cout << "Invalid input, try again";
@@ -155,7 +155,7 @@ Session::~Session() {
     for (auto & i : this->actionsLog)
         delete i;
     for(auto & x:this->userMap)
-        delete getUser(x.second->getName());
+        delete x.second;
     this->activeUser= nullptr; //point to null after deletion
     content.clear();
     actionsLog.clear();

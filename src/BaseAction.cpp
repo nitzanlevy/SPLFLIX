@@ -99,7 +99,7 @@ void CreateUser::act(Session &sess) {
 }
 
 std::string CreateUser::toString() const {
-    return "CreateUser: "+getStatusString() + this->getErrorMsg();
+    return "CreateUser: "+getStatusString() +" " + this->getErrorMsg();
 }
 
 BaseAction *CreateUser::clone() const {
@@ -114,21 +114,34 @@ void Watch::act(Session &sess) {
     int id;
     geek>>id;
     Watchable* watchable=sess.getWatchable(id); //watchable holds the watchable we want to watch
+    if(watchable->isEpisode()) {
+        std::cout << "Watching " + ((Episode*)(watchable))->getName() +" S"+((Episode*)(watchable))->getNumSeason()+"E"+((Episode*)(watchable))->getNumEpisode();
+    }
+    else{
+        std::cout << "Watching " + ((Movie*)(watchable))->getName();
+
+    }
     sess.getActiveUser()->addToHistory(watchable); //became seen
     watchable=watchable->getNextWatchable(sess); //getNextWatchable
+    if(!watchable){
+        this->error("you have watched all content");
+        return;
+    }
     this->complete();
-    std::cout <<"we recommend you to watch: "+ watchable->toString() + "continue? [y/n]";
+    string s=watchable->toString();
+    std::cout <<"We recommend watching"+ s.substr(s.find(" ")) + "[y/n]\n";
     string command;
     getline(std::cin, command);
     if(command=="y") {
         sess.setAction(std::to_string(watchable->getId()));
-        this->act(sess);
+        Watch *watch = new Watch();
+        watch->act(sess);
     }
     //Remmember to delete!!!
 }
 
 std::string Watch::toString() const {
-    return "Watching: "+getStatusString()+ this->getErrorMsg();
+    return "Watching: "+getStatusString()+" "+ this->getErrorMsg();
 }
 
 BaseAction *Watch::clone() const {
@@ -148,7 +161,7 @@ void ChangeActiveUser::act(Session &sess) {
 }
 
 std::string ChangeActiveUser::toString() const {
-    return "Change Active User: "+getStatusString()+ this->getErrorMsg();
+    return "Change Active User: "+getStatusString()+" "+ this->getErrorMsg();
 }
 
 BaseAction *ChangeActiveUser::clone() const {
@@ -169,7 +182,7 @@ void DeleteUser::act(Session &sess) {
 }
 
 std::string DeleteUser::toString() const {
-    return "Delete user: "+ getStatusString()+ this->getErrorMsg();
+    return "Delete user: "+ getStatusString()+" "+ this->getErrorMsg();
 }
 
 BaseAction *DeleteUser::clone() const {
@@ -198,7 +211,7 @@ void DuplicateUser::act(Session &sess) {
 
 }
 std::string DuplicateUser::toString() const {
-    return "Duplicate User: "+ getStatusString()+ this->getErrorMsg();
+    return "Duplicate User: "+ getStatusString()+" "+ this->getErrorMsg();
 }
 
 BaseAction *DuplicateUser::clone() const {
@@ -210,12 +223,12 @@ BaseAction *DuplicateUser::clone() const {
 void PrintContentList::act(Session &sess) {
     sess.addAction(this);
     for(auto & i : sess.getContent()) {
-        std::cout << i->toString();
+        std::cout << i->toString() + "\n";
     }
     this->complete();
 }
 std::string PrintContentList::toString() const {
-    return "Print Content List: " + getStatusString()+ this->getErrorMsg()+",";
+    return "Print Content List: " + getStatusString()+" "+ this->getErrorMsg()+",";
 }
 
 BaseAction *PrintContentList::clone() const {
@@ -233,7 +246,7 @@ void PrintWatchHistory::act(Session &sess) {
     this->complete();
 }
 std::string PrintWatchHistory::toString() const {
-    return "Print Watch History: " + getStatusString()+ this->getErrorMsg()+",";
+    return "Print Watch History: " + getStatusString()+" "+ this->getErrorMsg()+",";
 }
 
 BaseAction *PrintWatchHistory::clone() const {
@@ -252,7 +265,7 @@ void PrintActionsLog::act(Session &sess) {
 }
 
 std::string PrintActionsLog::toString() const {
-    return "Print Action log: " + getStatusString()+ this->getErrorMsg()+",";
+    return "Print Action log: " + getStatusString()+" "+ this->getErrorMsg();
 }
 
 BaseAction *PrintActionsLog::clone() const {
@@ -267,7 +280,7 @@ void Exit::act(Session &sess) {
     this->complete();
 }
 std::string Exit::toString() const {
-    return "Exit: " + getStatusString()+ this->getErrorMsg();
+    return "Exit: " + getStatusString()+" "+ this->getErrorMsg();
 }
 
 BaseAction *Exit::clone() const {
