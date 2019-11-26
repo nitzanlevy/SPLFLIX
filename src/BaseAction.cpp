@@ -241,7 +241,7 @@ void PrintWatchHistory::act(Session &sess) {
     sess.addAction(this);
     std::cout<< "Watch history for:"+sess.getActiveUser()->getName() <<std::endl;
     for(auto & i : sess.getActiveUser()->getHistory()) {
-        std::cout << i->toString();
+        std::cout << i->toString() +"\n";
     }
     this->complete();
 }
