@@ -16,7 +16,7 @@ Session::Session(const std::string &configFilePath){
     std::ifstream i(configFilePath);
     json j;
     i>>j;
-    int id=1;
+    long id=1;
     json movies=j["movies"];
     for (int k = 0; k <movies.size() ; k++) {
         json & js=movies[k];
@@ -376,7 +376,13 @@ Session *Session::clone() const {
 void Session::arrangePointers() { //when a session start, we gotta make sure users pointing to new watchables addresses
     for(auto &i:userMap){
         for (auto &j:i.second->getHistory()) {
-            j=getWatchable(j->getId());
+            long &id=j->getId();
+            for (auto &k:content) {
+                if (id==k->getId()) {
+                    j = k;
+                    break;
+                }
+            }
         }
     }
 }
