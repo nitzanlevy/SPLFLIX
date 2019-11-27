@@ -13,13 +13,13 @@ struct clonable {
 
 class Watchable :public clonable{
 public:
-    Watchable(long id, int length, const std::vector<std::string>& tags);
+    Watchable(long id, int length, std::vector<std::string>  tags);
     virtual ~Watchable();
     virtual std::string toString() const = 0;
     virtual Watchable* getNextWatchable(Session&) const = 0;
     virtual int getLength() const; // added to use recommendation algorithms
     int getId() const ;//added
-    const std::vector<std::string> getTags() const ;
+    const std::vector<std::string>& getTags() const ;
     virtual Watchable * clone() const=0;
     virtual bool isEpisode() const=0;
 private:

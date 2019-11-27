@@ -187,10 +187,15 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
     //start to search the mostTag in content
     while(!found) {
         //search the mostTag string in elems
+        bool isAllNeg= true; //indicates weather all is -1 , means they were candidate to be nextRecommendation, but failed.
         for (auto &i : elems) {
             if (i.second > maxTag)
                 mostTag = i.first;
-        }
+            if (i.second>=0)
+                isAllNeg= false;
+        } //mostTag holds greatestTag
+        if (isAllNeg) //all -1, nothing to recommend, you watched all.
+            return nullptr;
         //check in content-history for the recommendation
         for ( auto &i : s.getContent()) {
             if(!found) {
@@ -199,7 +204,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
                     if (i == j) {
                         flag = true;
                         break;
-                    }
+                    } //flag = true -> he already watched the one we want to recommend
                 }
                 for (int k = 0; k < i->getTags().size() && !flag; k++) {
                     if (i->getTags().at(k) == mostTag) {
@@ -211,12 +216,20 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
         }
         //if not matching for mostTag we search for the nextTag by deleting the mostTag from elems
         if(!found) {
-            for(auto it = elems.begin(); it!=elems.end(); it++ )
-                if(it->first == mostTag)
+            /*for(auto it = elems.begin(); it!=elems.end(); it++ )
+                if(it->first == mostTag) //added .base()!!
                     elems.erase(it);
+            maxTag=0;*/
+            for(auto &k :elems){
+                if (k.first==mostTag){
+                    k.second=-1; //setting k out of reach
+                }
+            }
             maxTag=0;
         }
     }
+    freq.clear();
+    elems.clear();
     return output;
 }
 

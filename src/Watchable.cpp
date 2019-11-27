@@ -2,10 +2,12 @@
 // Created by amit on 18/11/2019.
 //
 #include "../include/Watchable.h"
+
+#include <utility>
 #include "../include/User.h"
 #include "../include/Session.h"
 //Watchable methods
-Watchable ::Watchable(long id, int length, const std::vector<std::string> &tags):id(id),length(length),tags(tags) {}//check on tags
+Watchable ::Watchable(long id, int length, std::vector<std::string> tags):id(id),length(length),tags(std::move(tags)) {}//check on tags
 
 Watchable::~Watchable() {
     tags.clear();
@@ -19,7 +21,7 @@ int Watchable::getId() const {
     return id;
 }
 
-const std::vector<string> Watchable::getTags() const {
+const std::vector<string>& Watchable::getTags() const {
     return tags;
 }
 
