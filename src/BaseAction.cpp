@@ -9,7 +9,7 @@
 
 using std::string;
 
-BaseAction::BaseAction() {
+BaseAction::BaseAction() :errorMsg(),status() {
     status=PENDING;
     errorMsg="";
 }
