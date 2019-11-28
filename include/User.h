@@ -10,7 +10,7 @@
 class Watchable;
 class Session;
 
-class User : public clonable{ //should implement rule of five
+class User { //should implement rule of five
 public:
     User(const std::string& name); //constructor
     virtual ~User(); //destructor

@@ -10,7 +10,7 @@ using std::string;
 class User;
 class Watchable;
 
-class Session : public clonable{
+class Session{
 public:
     Session(const std::string &configFilePath); //constructor
     Session(const Session &); //Copy constructor
