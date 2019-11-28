@@ -29,7 +29,7 @@ const std::vector<string>& Watchable::getTags() const {
 
 //start Movie methods
 
-Movie::Movie(long id, const std::string &name, int length, const std::vector<std::string> &tags):Watchable(id,length,tags),name(name){}
+Movie::Movie(long id, std::string name, int length, const std::vector<std::string> &tags):Watchable(id,length,tags),name(std::move(name)){}
 
 Watchable* Movie::getNextWatchable(Session & session) const {
     return session.getActiveUser()->getRecommendation(session);
@@ -59,8 +59,8 @@ std::string Movie::getName() {
 //end movie methods
 
 //start Episode methods
-Episode::Episode(long id, const std::string &seriesName, int length, int season, int episode,
-                 const std::vector<std::string> &tags) :Watchable(id,length,tags),season(season),episode(episode),seriesName(seriesName),nextEpisodeId(id+1){
+Episode::Episode(long id, std::string seriesName, int length, int season, int episode,
+                 const std::vector<std::string> &tags) :Watchable(id,length,tags),season(season),episode(episode),seriesName(std::move(seriesName)),nextEpisodeId(id+1){
     //nextEpisodeId needs a value!
 }
 
