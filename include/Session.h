@@ -17,7 +17,7 @@ public:
     Session&operator=(const Session&); //Copy assignment operator
     Session &operator=(Session &&); //move assignment operator
     Session(Session &&); // move constructor
-    ~Session(); //destructor
+    virtual ~Session(); //destructor
     void start();
     User * getActiveUser() const; //added to get recommendation
     std::vector<Watchable*>& getContent();// added
