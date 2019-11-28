@@ -38,7 +38,7 @@ Watchable* Movie::getNextWatchable(Session & session) const {
 
 std::string Movie::toString() const {
     string s;
-    for(int i=0;i<this->getTags().size();i++)
+    for(int i=0;(unsigned)i<this->getTags().size();i++)
         s=s+this->getTags().at(i)+", ";
     s=s.substr(0,s.length()-2);
     return std::to_string(this->getId()) + ". "+ name +" "+ std::to_string(this->getLength()) +" minutes ["+s+"]" ;
@@ -76,7 +76,7 @@ Watchable* Episode::getNextWatchable(Session & session) const {
 
 std::string Episode::toString() const {
     string s;
-    for(int i=0;i<this->getTags().size();i++)
+    for(int i=0; (unsigned)i<this->getTags().size();i++)
         s=s+this->getTags().at(i)+", ";
     s=s.substr(0,s.length()-2);
     return std::to_string(this->getId()) + ". " + seriesName + " S" + std::to_string(this->season)+ "E" + std::to_string(this->episode) +" "+ std::to_string(this->getLength()) + " minutes ["+s+"]" ;

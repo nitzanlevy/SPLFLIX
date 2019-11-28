@@ -37,7 +37,7 @@ BaseAction::~BaseAction() {
 //function to check if string include only characters
 bool BaseAction::isValid(string& check) {
     bool verify = true;
-    for (int i = 0; i < check.length(); i++)
+    for (int i = 0; (unsigned) i < check.length(); i++)
     {
         if ((check[i] >= 'a' && check[i] <= 'z') || (check[i] >= 'A' && check[i] <= 'Z'))
             verify = true;
@@ -69,7 +69,7 @@ void BaseAction::copy_from(BaseAction* toCopy) {
 void CreateUser::act(Session &sess) {
     sess.addAction(this); //push the action with pending status
     string action=sess.getAction();
-    if(action.find(" ")!=-1)
+    if((signed) action.find(" ")!=-1)
     {
         string name = action.substr(0, action.find(" "));
         string code = action.substr(action.find(" ") + 1, action.length());
@@ -194,7 +194,7 @@ BaseAction *DeleteUser::clone() const {
 void DuplicateUser::act(Session &sess) {
     sess.addAction(this);
     string action=sess.getAction();//get the new name from action!!!
-    if(action.find(" ")!=-1) {
+    if((signed)action.find(" ")!=-1) {
         string existingUser = action.substr(0, action.find(" "));
         string newOne = action.substr(action.find(" ") + 1, action.length());
         if (sess.userExist(newOne))

@@ -18,17 +18,17 @@ Session::Session(const std::string &configFilePath){
     i>>j;
     long id=1;
     json movies=j["movies"];
-    for (int k = 0; k <movies.size() ; k++) {
+    for (int k = 0; (unsigned) k <movies.size() ; k++) {
         json & js=movies[k];
         content.push_back(new Movie(id,js["name"],js["length"],js["tags"]));
         id++;
     }
 
     json tv=j["tv_series"]; //takes all series
-    for (int k = 0; k <tv.size() ; k++) {
+    for (int k = 0; (unsigned)k <tv.size() ; k++) {
         json & jt=tv[k]; //take a series
         json & seas=jt["seasons"]; // num Of Seasons
-        for (int i = 0; i < seas.size(); ++i) {
+        for (int i = 0;(unsigned) i < seas.size(); ++i) {
             for (int l = 0; l <seas[i] ; ++l) {
                 content.push_back(new Episode(id,jt["name"],jt["episode_length"],i+1,l+1,jt["tags"]));
                 id++;
@@ -50,7 +50,7 @@ void Session::start() {
         getline(cin, command);
         setAction(command);
         //command with 1 word
-        if(command.find(" ") ==-1) {
+        if((signed) command.find(" ") ==-1) {
             if(this->isValid(command)) {
                 //handle the command
                 if (command == "exit") {
@@ -80,7 +80,7 @@ void Session::start() {
             string theAct = command.substr(0, command.find(" "));
             string info = command.substr(command.find(" ") + 1, command.length());
             //command with 2 words
-            if(info.find(" ") ==-1) {
+            if((signed) info.find(" ") ==-1) {
                 if (this->isValid(theAct) && theAct.size() > 0 && info.size() > 0) {
                     if(theAct=="changeuser" && this->isValid(info)){
                         this->action=info;
@@ -99,7 +99,7 @@ void Session::start() {
                         std::stringstream geek(info);
                         int id;
                         geek>>id;
-                        if( 0 < id && id <= this->content.size()) {
+                        if( 0 < id && (unsigned) id <= this->content.size()) {
                             this->action = info;
                             Watch *watch = new Watch();
                             watch->act(*this);
@@ -240,7 +240,7 @@ bool Session::userExist(const string &userName) {
 //function to check if string include only characters
 bool Session::isValid(const string& check) {
     bool verify = true;
-    for (int i = 0; i < check.length(); i++)
+    for (int i = 0; (unsigned) i < check.length(); i++)
     {
         if ((check[i] >= 'a' && check[i] <= 'z') || (check[i] >= 'A' && check[i] <= 'Z'))
             verify = true;
@@ -255,7 +255,7 @@ bool Session::isValid(const string& check) {
 
 bool Session::isNumber(const string& str)
 {
-    for(int i = 0;i < str.size();i++) {
+    for(int i = 0;(unsigned) i < str.size();i++) {
         if(str[i]=='0' || str[i]=='1'|| str[i]=='2' ||str[i]=='3' ||str[i]=='4' ||str[i]=='5' ||str[i]=='6'||str[i]=='7'||str[i]=='8'||str[i]=='9') {
             return true;
         } else {
