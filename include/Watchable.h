@@ -6,12 +6,8 @@
 
 
 class Session;
-struct clonable {
-    //virtual ~clonable() = default;
-    virtual clonable* clone() const = 0;
-};
 
-class Watchable :public clonable{
+class Watchable{
 public:
     Watchable(long id, int length, std::vector<std::string>  tags);
     virtual ~Watchable();

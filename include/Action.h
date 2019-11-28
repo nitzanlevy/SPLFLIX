@@ -14,7 +14,7 @@ enum ActionStatus{
 };
 
 
-class BaseAction : public clonable{
+class BaseAction{
 public:
     virtual ~BaseAction();
     BaseAction();

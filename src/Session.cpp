@@ -11,7 +11,7 @@
 using std::string;
 using namespace std;
 
-Session::Session(const std::string &configFilePath){
+Session::Session(const std::string &configFilePath) : content(),actionsLog(),userMap(),activeUser(),action(),continueToRun(){
     using json = nlohmann::json ;
     std::ifstream i(configFilePath);
     json j;
@@ -325,30 +325,31 @@ Session &Session::operator=(const Session & other) { //copy assignment operator
         this->userMap.insert({i.first,i.second->clone()});
     }
     //done copying
-
+    return *this; //added statement
 }
 
-Session::Session(const Session & other) { //copy constructor
-    //active user - points to default
-    //this->activeUser=other.getActiveUser()->clone();
-    //run
-    this->continueToRun= true;
-    // action - no need
+Session::Session(const Session & other): content(),actionsLog(),userMap(),activeUser(),action(),continueToRun() { //copy constructor
     //content:
     for(auto & i : other.content) {
         this->content.push_back(i->clone());
+    }
+    //active user - points to default
+    //this->activeUser=other.getActiveUser()->clone();
+    //action log
+    for(auto & i : other.actionsLog) {
+        this->actionsLog.push_back(i->clone());
     }
     // user map
     for(auto & i : other.userMap) {
         this->userMap.insert({i.first,i.second->clone()}); //second needs clone
     }
-    //action log ?
-    for(auto & i : other.actionsLog) {
-        this->actionsLog.push_back(i->clone());
-    }
+    //run
+    this->continueToRun= true;
+    // action - no need
+
 }
 
-Session::Session(Session && other){ //move constructor
+Session::Session(Session && other): content(),actionsLog(),userMap(),activeUser(),action(),continueToRun(){ //move constructor
     this->activeUser=other.activeUser;
     this->continueToRun=other.continueToRun;
     //now dealing with pointers, we set this pointer to the obj, and other pointer to null.
