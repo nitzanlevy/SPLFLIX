@@ -15,8 +15,6 @@ Watchable::~Watchable() {
 
 int Watchable::getLength() const { return this->length;}
 
-std::string Watchable::toString() const {}
-
 long & Watchable::getId() const {
     return const_cast<long &>(id);
 }
@@ -60,7 +58,7 @@ std::string Movie::getName() {
 
 //start Episode methods
 Episode::Episode(long id, std::string seriesName, int length, int season, int episode,
-                 const std::vector<std::string> &tags) :Watchable(id,length,tags),season(season),episode(episode),seriesName(std::move(seriesName)),nextEpisodeId(id+1){
+                 const std::vector<std::string> &tags) :Watchable(id,length,tags),seriesName(std::move(seriesName)),season(season),episode(episode),nextEpisodeId(id+1){
     //nextEpisodeId needs a value!
 }
 

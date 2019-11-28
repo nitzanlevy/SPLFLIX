@@ -256,12 +256,10 @@ bool Session::isValid(const string& check) {
 bool Session::isNumber(const string& str)
 {
     for(int i = 0;(unsigned) i < str.size();i++) {
-        if(str[i]=='0' || str[i]=='1'|| str[i]=='2' ||str[i]=='3' ||str[i]=='4' ||str[i]=='5' ||str[i]=='6'||str[i]=='7'||str[i]=='8'||str[i]=='9') {
-            return true;
-        } else {
-            return false;
-        }
+        return str[i] == '0' || str[i] == '1' || str[i] == '2' || str[i] == '3' || str[i] == '4' || str[i] == '5' ||
+               str[i] == '6' || str[i] == '7' || str[i] == '8' || str[i] == '9';
     }
+    return false;
 }
 
 Session &Session::operator=(Session && other) { //move assignment operator
@@ -297,6 +295,7 @@ Session &Session::operator=(Session && other) { //move assignment operator
         i= nullptr;
     }
     other.content.clear();
+    return *this;
 }
 
 Session &Session::operator=(const Session & other) { //copy assignment operator
