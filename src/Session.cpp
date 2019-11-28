@@ -16,7 +16,7 @@ Session::Session(const std::string &configFilePath){
     std::ifstream i(configFilePath);
     json j;
     i>>j;
-    int id=1;
+    long id=1;
     json movies=j["movies"];
     for (int k = 0; k <movies.size() ; k++) {
         json & js=movies[k];
@@ -42,6 +42,7 @@ void Session::start() {
     std::cout<< "SPLFLIX is now on!";
     LengthRecommenderUser *defaultUser=new LengthRecommenderUser("default");
     setNewActiveUser(defaultUser);
+    arrangePointers();
     while (continueToRun){
         cout<<""<<endl;// get down a line each time
         string command;
@@ -328,8 +329,8 @@ Session &Session::operator=(const Session & other) { //copy assignment operator
 }
 
 Session::Session(const Session & other) { //copy constructor
-    //active user
-    this->activeUser=other.getActiveUser()->clone();
+    //active user - points to default
+    //this->activeUser=other.getActiveUser()->clone();
     //run
     this->continueToRun= true;
     // action - no need
@@ -370,5 +371,19 @@ Session::Session(Session && other){ //move constructor
 
 Session *Session::clone() const {
     return new Session(*this);
+}
+
+void Session::arrangePointers() { //when a session start, we gotta make sure users pointing to new watchables addresses
+    for(auto &i:userMap){
+        for (auto &j:i.second->getHistory()) {
+            long id=j->getId();
+            for (auto &k:content) {
+                if (id==k->getId()) {
+                    j = k;
+                    break;
+                }
+            }
+        }
+    }
 }
 

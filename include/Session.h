@@ -34,6 +34,7 @@ public:
     int contentSize();// added
     bool userExist(const string& userName);
     virtual Session * clone() const ;
+    void arrangePointers();
 private:
     bool isNumber(const string& check);
     bool isValid(const string& check);

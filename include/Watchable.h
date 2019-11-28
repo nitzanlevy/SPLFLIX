@@ -7,19 +7,19 @@
 
 class Session;
 struct clonable {
-    virtual ~clonable() = default;
+    //virtual ~clonable() = default;
     virtual clonable* clone() const = 0;
 };
 
 class Watchable :public clonable{
 public:
-    Watchable(long id, int length, const std::vector<std::string>& tags);
+    Watchable(long id, int length, std::vector<std::string>  tags);
     virtual ~Watchable();
     virtual std::string toString() const = 0;
     virtual Watchable* getNextWatchable(Session&) const = 0;
     virtual int getLength() const; // added to use recommendation algorithms
-    int getId() const ;//added
-    const std::vector<std::string> getTags() const ;
+    long & getId() const;//added , changed to long
+    const std::vector<std::string>& getTags() const ;
     virtual Watchable * clone() const=0;
     virtual bool isEpisode() const=0;
 private:
@@ -30,8 +30,8 @@ private:
 
 class Movie : public Watchable{
 public:
-    Movie(long id, const std::string& name, int length, const std::vector<std::string>& tags);
-    virtual ~Movie();
+    Movie(long id, std::string  name, int length, const std::vector<std::string>& tags);
+    //destructor deleted
     virtual std::string toString() const;
     virtual Watchable* getNextWatchable(Session&) const;
     virtual Watchable *clone() const ;
@@ -44,8 +44,8 @@ private:
 
 class Episode: public Watchable{
 public:
-    Episode(long id, const std::string& seriesName,int length, int season, int episode ,const std::vector<std::string>& tags);
-    virtual ~Episode();
+    Episode(long id, std::string  seriesName,int length, int season, int episode ,const std::vector<std::string>& tags);
+    //destructor deleted
     virtual std::string toString() const;
     virtual Watchable* getNextWatchable(Session&) const;
     std::string getName(); //added

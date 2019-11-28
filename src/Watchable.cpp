@@ -2,10 +2,12 @@
 // Created by amit on 18/11/2019.
 //
 #include "../include/Watchable.h"
+
+#include <utility>
 #include "../include/User.h"
 #include "../include/Session.h"
 //Watchable methods
-Watchable ::Watchable(long id, int length, const std::vector<std::string> &tags):id(id),length(length),tags(tags) {}//check on tags
+Watchable ::Watchable(long id, int length, std::vector<std::string> tags):id(id),length(length),tags(std::move(tags)) {}//check on tags
 
 Watchable::~Watchable() {
     tags.clear();
@@ -15,11 +17,11 @@ int Watchable::getLength() const { return this->length;}
 
 std::string Watchable::toString() const {}
 
-int Watchable::getId() const {
-    return id;
+long & Watchable::getId() const {
+    return const_cast<long &>(id);
 }
 
-const std::vector<string> Watchable::getTags() const {
+const std::vector<string>& Watchable::getTags() const {
     return tags;
 }
 
@@ -27,9 +29,7 @@ const std::vector<string> Watchable::getTags() const {
 
 //start Movie methods
 
-Movie::Movie(long id, const std::string &name, int length, const std::vector<std::string> &tags):Watchable(id,length,tags),name(name){}
-
-Movie::~Movie() {}
+Movie::Movie(long id, std::string name, int length, const std::vector<std::string> &tags):Watchable(id,length,tags),name(std::move(name)){}
 
 Watchable* Movie::getNextWatchable(Session & session) const {
     return session.getActiveUser()->getRecommendation(session);
@@ -55,15 +55,14 @@ bool Movie::isEpisode() const {
 std::string Movie::getName() {
     return this->name;
 }
+
 //end movie methods
 
 //start Episode methods
-Episode::Episode(long id, const std::string &seriesName, int length, int season, int episode,
-                 const std::vector<std::string> &tags) :Watchable(id,length,tags),season(season),episode(episode),seriesName(seriesName),nextEpisodeId(id+1){
+Episode::Episode(long id, std::string seriesName, int length, int season, int episode,
+                 const std::vector<std::string> &tags) :Watchable(id,length,tags),season(season),episode(episode),seriesName(std::move(seriesName)),nextEpisodeId(id+1){
     //nextEpisodeId needs a value!
 }
-
-Episode::~Episode(){}
 
 Watchable* Episode::getNextWatchable(Session & session) const {
     Watchable *nextWatchable=getNextEpisode(session);
