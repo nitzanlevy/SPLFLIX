@@ -89,7 +89,7 @@ void User::setName(std::string newName) {
 LengthRecommenderUser::LengthRecommenderUser(const std::string &name) : User(name) {}
 
 Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
-    if(s.contentSize()!=this->history.size()) {
+    if((unsigned) s.contentSize()!= (unsigned)this->history.size()) {
         int avgLength(0); //average watch time
         int historyLength = this->history.size(); //num of content the user watched
         for (int i = 0; i < historyLength; i++)
@@ -206,7 +206,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
                         break;
                     } //flag = true -> he already watched the one we want to recommend
                 }
-                for (int k = 0; k < i->getTags().size() && !flag; k++) {
+                for (int k = 0;(unsigned) k < i->getTags().size() && !flag; k++) {
                     if (i->getTags().at(k) == mostTag) {
                         output = i;
                         found = true;
