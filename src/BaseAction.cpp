@@ -115,10 +115,10 @@ void Watch::act(Session &sess) {
     geek>>id;
     Watchable* watchable=sess.getWatchable(id); //watchable holds the watchable we want to watch
     if(watchable->isEpisode()) {
-        std::cout << "Watching " + ((Episode*)(watchable))->getName() +" S"+((Episode*)(watchable))->getNumSeason()+"E"+((Episode*)(watchable))->getNumEpisode();
+        std::cout << "Watching " + ((Episode*)(watchable))->getName() +" S"+((Episode*)(watchable))->getNumSeason()+"E"+((Episode*)(watchable))->getNumEpisode() +"\n";
     }
     else{
-        std::cout << "Watching " + ((Movie*)(watchable))->getName();
+        std::cout << "Watching " + ((Movie*)(watchable))->getName() +"\n";
 
     }
     sess.getActiveUser()->addToHistory(watchable); //became seen

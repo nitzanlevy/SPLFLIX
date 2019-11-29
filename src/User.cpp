@@ -181,7 +181,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
     vector<pair<string,int>> elems(freq.begin(), freq.end());
     sort(elems.begin(), elems.end(),sortbyTag);
     bool found= false;
-    int maxTag=0;
+    int maxTag=-1;
     string mostTag="";
     Watchable *output;
     //start to search the mostTag in content
@@ -189,8 +189,10 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
         //search the mostTag string in elems
         bool isAllNeg= true; //indicates weather all is -1 , means they were candidate to be nextRecommendation, but failed.
         for (auto &i : elems) {
-            if (i.second > maxTag)
+            if (i.second > maxTag) {
                 mostTag = i.first;
+                maxTag=i.second;
+            }
             if (i.second>=0)
                 isAllNeg= false;
         } //mostTag holds greatestTag
@@ -222,10 +224,10 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
             maxTag=0;*/
             for(auto &k :elems){
                 if (k.first==mostTag){
-                    k.second=-1; //setting k out of reach
+                    k.second=-2; //setting k out of reach
                 }
             }
-            maxTag=0;
+            maxTag=-1;
         }
     }
     freq.clear();
