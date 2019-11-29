@@ -36,12 +36,13 @@ Session::Session(const std::string &configFilePath) : content(),actionsLog(),use
         }
     }
     continueToRun=true; //keep running until otherwise
+    LengthRecommenderUser *defaultUser=new LengthRecommenderUser("default");
+    this->userMap.insert({defaultUser->getName(),defaultUser});
+    this->activeUser=defaultUser;
 }
 
 void Session::start() {
     std::cout<< "SPLFLIX is now on!";
-    LengthRecommenderUser *defaultUser=new LengthRecommenderUser("default");
-    setNewActiveUser(defaultUser);
     arrangePointers();
     while (continueToRun){
         cout<<""<<endl;// get down a line each time
@@ -144,7 +145,6 @@ void Session::start() {
             getline(cin,rerun);
             if (rerun=="y")
                 continueToRun= true;
-            else delete defaultUser;
         }
     }
 }
@@ -278,6 +278,7 @@ Session &Session::operator=(Session && other) { //move assignment operator
     this->actionsLog.clear();
     //now start moving and deleting other resources
     this->activeUser=other.activeUser;
+    other.activeUser= nullptr; //added
     this->continueToRun=other.continueToRun;
     //now dealing with pointers, we set this pointer to the obj, and other pointer to null.
     for (auto &i:other.actionsLog) {
@@ -321,7 +322,14 @@ Session &Session::operator=(const Session & other) { //copy assignment operator
         this->content.push_back(i->clone());
     }
     for(auto & i:other.userMap){
-        this->userMap.insert({i.first,i.second->clone()});
+        if (i.first!=other.getActiveUser()->getName())
+            this->userMap.insert({i.first,i.second->clone()}); //second needs clone
+        else{
+            User *toAdd=i.second->clone();
+            activeUser=toAdd;
+            userMap.insert({toAdd->getName(),toAdd});
+            toAdd= nullptr;
+        }
     }
     //done copying
     return *this; //added statement
@@ -332,16 +340,23 @@ Session::Session(const Session & other): content(),actionsLog(),userMap(),active
     for(auto & i : other.content) {
         this->content.push_back(i->clone());
     }
-    //active user - points to default
-    //this->activeUser=other.getActiveUser()->clone();
+    //this->activeUser=other.activeUser->clone(); //added
     //action log
     for(auto & i : other.actionsLog) {
         this->actionsLog.push_back(i->clone());
     }
     // user map
     for(auto & i : other.userMap) {
-        this->userMap.insert({i.first,i.second->clone()}); //second needs clone
+        if (i.first!=other.getActiveUser()->getName())
+            this->userMap.insert({i.first,i.second->clone()}); //second needs clone
+        else{
+            User *toAdd=i.second->clone();
+            activeUser=toAdd;
+            userMap.insert({toAdd->getName(),toAdd});
+            toAdd= nullptr;
+        }
     }
+
     //run
     this->continueToRun= true;
     // action - no need
@@ -350,6 +365,7 @@ Session::Session(const Session & other): content(),actionsLog(),userMap(),active
 
 Session::Session(Session && other): content(),actionsLog(),userMap(),activeUser(),action(),continueToRun(){ //move constructor
     this->activeUser=other.activeUser;
+    other.activeUser= nullptr; //added
     this->continueToRun=other.continueToRun;
     //now dealing with pointers, we set this pointer to the obj, and other pointer to null.
     for (auto &i:other.actionsLog) {
