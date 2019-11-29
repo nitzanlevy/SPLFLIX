@@ -10,7 +10,7 @@ using namespace std;
     return this->history;
 }*/
 
-User::User(const std::string &name) : history(),name(name){}
+User::User(const std::string &name) : name(name), history() {}
 
 std::string User::getName() const {
     return name;
@@ -23,7 +23,7 @@ User::~User() { //null history pointers, destructor
     history.clear(); //clean junk values
 }
 
-User::User(const User & user) :history(), name(){ //copy constructor
+User::User(const User & user) : name(), history() { //copy constructor
     for(auto  i : user.history) //possible &
         history.push_back(i); //pass by pointer, not deepcopy
     this->name=user.name; // careful!!
@@ -55,7 +55,7 @@ std::vector<Watchable *> &User::getHistory() {
 }
 
 
-User::User(User && other) :history(), name() { //move constructor
+User::User(User && other) : name(),history() { //move constructor
     this->name=other.name;
     for (auto &i :other.history) { //move pointer and destroy other's pointer
         this->history.push_back(i);
