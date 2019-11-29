@@ -121,7 +121,7 @@ void Watch::act(Session &sess) {
         std::cout << "Watching " + ((Movie*)(watchable))->getName() +"\n";
 
     }
-    sess.getActiveUser()->addToHistory(watchable); //became seen
+    sess.getActiveUser()->addToHistory(watchable->clone()); //became seen
     watchable=watchable->getNextWatchable(sess); //getNextWatchable
     if(!watchable){
         this->error("you have watched all content");
