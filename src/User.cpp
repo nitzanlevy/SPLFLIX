@@ -11,7 +11,7 @@ using namespace std;
     return this->history;
 }*/
 
-User::User(std::string name) : name(std::move(name)), history() {}
+User::User(std::string name) : history(),name(std::move(name)) {}
 
 std::string User::getName() const {
     return name;
@@ -52,7 +52,7 @@ std::vector<Watchable *> &User::getHistory() {
 }
 
 
-User::User(User && other) : name(),history() { //move constructor
+User::User(User && other) : history(),name() { //move constructor
     this->name=other.name;
     for (auto &i :other.history) { //move pointer and destroy other's pointer
         this->history.push_back(i);
