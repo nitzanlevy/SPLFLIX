@@ -26,15 +26,12 @@ void BaseAction::error(const std::string &errorMsg) {
 std::string BaseAction::getErrorMsg() const {
     return errorMsg;
 }
- ActionStatus BaseAction::getStatus() const {
-     return status;
-}
 
 BaseAction::~BaseAction() {
 
 }
 
-//function to check if string include only characters
+//function to check if a string includes only characters
 bool BaseAction::isValid(string& check) {
     bool verify = true;
     for (int i = 0; (unsigned) i < check.length(); i++)
@@ -58,11 +55,6 @@ std::string BaseAction::getStatusString() const {
         return "Completed";
     }
     return "Error";
-}
-
-void BaseAction::copy_from(BaseAction* toCopy) {
-    this->status=toCopy->status;
-    this->errorMsg=toCopy->errorMsg;
 }
 
 //CreateUser
@@ -106,9 +98,8 @@ BaseAction *CreateUser::clone() const {
     return new CreateUser(*this);
 }
 
-//Watch- ******need to fix this function.******
+//Watch
 void Watch::act(Session &sess) {
-    //watch - now recommend
     sess.addAction(this); //push the action with pending status
     std::stringstream geek(sess.getAction());
     int id;
@@ -122,12 +113,12 @@ void Watch::act(Session &sess) {
 
     }
     sess.getActiveUser()->addToHistory(watchable->clone()); //became seen
+    this->complete(); //watchable seen and added
     watchable=watchable->getNextWatchable(sess); //getNextWatchable
     if(!watchable){
-        this->error("you have watched all content");
+        std::cout<<"you have watched all content";
         return;
     }
-    this->complete();
     string s=watchable->toString();
     std::cout <<"We recommend watching"+ s.substr(s.find(" ")) + "[y/n]\n";
     string command;
@@ -137,7 +128,6 @@ void Watch::act(Session &sess) {
         Watch *watch = new Watch();
         watch->act(sess);
     }
-    //Remmember to delete!!!
 }
 
 std::string Watch::toString() const {
@@ -193,7 +183,7 @@ BaseAction *DeleteUser::clone() const {
 //Duplicate User
 void DuplicateUser::act(Session &sess) {
     sess.addAction(this);
-    string action=sess.getAction();//get the new name from action!!!
+    string action=sess.getAction();//get the new name from action
     if((signed)action.find(" ")!=-1) {
         string existingUser = action.substr(0, action.find(" "));
         string newOne = action.substr(action.find(" ") + 1, action.length());

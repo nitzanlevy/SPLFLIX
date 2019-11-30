@@ -12,14 +12,13 @@ class Session;
 
 class User { //should implement rule of five
 public:
-    User(const std::string& name); //constructor
+    User(std::string  name); //constructor
     virtual ~User(); //destructor
     User(const User &); //Copy constructor
     User&operator=(const User&); //Copy assignment operator
     virtual Watchable* getRecommendation(Session& s) = 0;
     std::string getName() const;
     //std::vector<Watchable*> get_history() const;
-    Watchable* getWatchableAt(int index); //added
     int getHistorySize(); //added
     std::vector<Watchable*>& getHistory();
     User (User &&); //move assignment constructor

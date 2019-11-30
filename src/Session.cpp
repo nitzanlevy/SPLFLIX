@@ -333,7 +333,6 @@ Session::Session(const Session & other): content(),actionsLog(),userMap(),active
     for(auto & i : other.content) {
         this->content.push_back(i->clone());
     }
-    //this->activeUser=other.activeUser->clone(); //added
     //action log
     for(auto & i : other.actionsLog) {
         this->actionsLog.push_back(i->clone());
@@ -349,11 +348,9 @@ Session::Session(const Session & other): content(),actionsLog(),userMap(),active
             toAdd= nullptr;
         }
     }
-
     //run
     this->continueToRun= true;
     // action - no need
-
 }
 
 Session::Session(Session && other): content(),actionsLog(),userMap(),activeUser(),action(),continueToRun(){ //move constructor
@@ -380,19 +377,5 @@ Session::Session(Session && other): content(),actionsLog(),userMap(),activeUser(
 
 Session *Session::clone() const {
     return new Session(*this);
-}
-
-void Session::arrangePointers() { //when a session start, we gotta make sure users pointing to new watchables addresses
-    for(auto &i:userMap){
-        for (auto &j:i.second->getHistory()) {
-            long id=j->getId();
-            for (auto &k:content) {
-                if (id==k->getId()) {
-                    j = k;
-                    break;
-                }
-            }
-        }
-    }
 }
 
