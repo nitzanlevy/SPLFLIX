@@ -2,6 +2,7 @@
 #include "../include/Watchable.h"
 #include "../include/Session.h"
 #include <algorithm>
+#include <utility>
 using namespace std;
 //
 // Created by amit on 18/11/2019.
@@ -10,7 +11,7 @@ using namespace std;
     return this->history;
 }*/
 
-User::User(const std::string &name) : name(name), history() {}
+User::User(std::string name) : name(std::move(name)), history() {}
 
 std::string User::getName() const {
     return name;
@@ -46,10 +47,6 @@ int User::getHistorySize() {
     return history.size();
 }
 
-Watchable *User::getWatchableAt(int index) {
-    return history.at(index);
-}
-
 std::vector<Watchable *> &User::getHistory() {
     return history;
 }
@@ -82,7 +79,7 @@ void User::addToHistory(Watchable* watch) {
 }
 
 void User::setName(std::string newName) {
-    this->name=newName;
+    this->name=std::move(newName);
 }
 
 //LengthRecommenderUser functions
@@ -97,7 +94,7 @@ Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
         avgLength = avgLength / historyLength;
         //avgLength now holds the average length, now we need to find the closest one which he hadn't seen
         int minDist=INT32_MAX;
-        Watchable* output;
+        Watchable *output = nullptr;
         for(auto & i : s.getContent()) {
             bool flag= false;
             for(auto & j : this->history) {
@@ -143,10 +140,7 @@ bool sortbyTag(const pair<string,int> &a,
 {
     return (a.first < b.first);
 }
-bool isEqual(pair<string, int>& element,string tag)
-{
-    return element.first == tag;
-}
+
 //GenreRecommenderUser functions
 GenreRecommenderUser::GenreRecommenderUser(const std::string &name): User(name) {}
 Watchable* GenreRecommenderUser::getRecommendation(Session &s) {

@@ -382,17 +382,3 @@ Session *Session::clone() const {
     return new Session(*this);
 }
 
-void Session::arrangePointers() { //when a session start, we gotta make sure users pointing to new watchables addresses
-    for(auto &i:userMap){
-        for (auto &j:i.second->getHistory()) {
-            long id=j->getId();
-            for (auto &k:content) {
-                if (id==k->getId()) {
-                    j = k;
-                    break;
-                }
-            }
-        }
-    }
-}
-

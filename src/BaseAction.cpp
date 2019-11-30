@@ -26,9 +26,6 @@ void BaseAction::error(const std::string &errorMsg) {
 std::string BaseAction::getErrorMsg() const {
     return errorMsg;
 }
- ActionStatus BaseAction::getStatus() const {
-     return status;
-}
 
 BaseAction::~BaseAction() {
 
@@ -58,11 +55,6 @@ std::string BaseAction::getStatusString() const {
         return "Completed";
     }
     return "Error";
-}
-
-void BaseAction::copy_from(BaseAction* toCopy) {
-    this->status=toCopy->status;
-    this->errorMsg=toCopy->errorMsg;
 }
 
 //CreateUser

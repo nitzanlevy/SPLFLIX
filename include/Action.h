@@ -18,11 +18,9 @@ class BaseAction{
 public:
     virtual ~BaseAction();
     BaseAction();
-    ActionStatus getStatus() const;
     virtual void act(Session& sess)=0;
     virtual std::string toString() const=0;
     virtual BaseAction * clone() const=0;
-    virtual void copy_from(BaseAction* toCopy);
 protected:
     void complete();
     void error(const std::string& errorMsg);
