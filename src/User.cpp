@@ -17,10 +17,10 @@ std::string User::getName() const {
     return name;
 }
 
-User::~User() { //null history pointers, destructor
+User::~User() { //destructor
     for(auto & i : this->history) {
         delete i;
-    } //null all pointers
+    } //delete cloned watchables
     history.clear(); //clean junk values
 }
 
@@ -34,11 +34,11 @@ User &User::operator=(const User & user) { //copy assignment operator
     if (this == &user) {  //check for "self assignment"
         return *this;
     }
-    this->name=user.name; //added
+    this->name=user.name;
     for(auto & i : this->history) //destroy old list
         delete i;
     this->history.clear();
-    for(auto & i : user.history) //possible &
+    for(auto & i : user.history) //push cloned watchables from other user
         history.push_back(i->clone());
     return *this;
 }
@@ -62,10 +62,11 @@ User::User(User && other) : name(),history() { //move constructor
 }
 
 User &User::operator=(User &&other) { //move assignment operator
-    for (auto &i:this->history) { //we don't delete, it points to content values, every user shares them.
-        i= nullptr;
+    for (auto &i:this->history) { // clean previous values
+        delete i;
     }
     this->history.clear();//delete user history
+    this->name=other.name;
     for (auto &i:other.history) {
         this->history.push_back(i);
         i= nullptr; //detach other's resources
