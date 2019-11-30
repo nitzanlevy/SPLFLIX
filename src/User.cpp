@@ -18,14 +18,14 @@ std::string User::getName() const {
 
 User::~User() { //null history pointers, destructor
     for(auto & i : this->history) {
-        i = nullptr;
+        delete i;
     } //null all pointers
     history.clear(); //clean junk values
 }
 
-User::User(const User & user) : name(), history() { //copy constructor
-    for(auto  i : user.history) //possible &
-        history.push_back(i); //pass by pointer, not deepcopy
+User::User(const User & user) :history(), name(){ //copy constructor
+    for(auto & i : user.history) 
+        history.push_back(i->clone()); //pass by value
     this->name=user.name; // careful!!
 }
 
@@ -33,12 +33,12 @@ User &User::operator=(const User & user) { //copy assignment operator
     if (this == &user) {  //check for "self assignment"
         return *this;
     }
-
+    this->name=user.name; //added
     for(auto & i : this->history) //destroy old list
-        i= nullptr;
+        delete i;
     this->history.clear();
     for(auto & i : user.history) //possible &
-        history.push_back(i);
+        history.push_back(i->clone());
     return *this;
 }
 
@@ -101,7 +101,7 @@ Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
         for(auto & i : s.getContent()) {
             bool flag= false;
             for(auto & j : this->history) {
-                if (i->toString()==j->toString()){
+                if (i->getId()==j->getId()){
                     flag= true;
                     break;
                 }
@@ -118,10 +118,8 @@ Watchable* LengthRecommenderUser::getRecommendation(Session &s) {
 }
 
 User *LengthRecommenderUser::clone() const {
-    LengthRecommenderUser *newUSer=new LengthRecommenderUser(*this);
-    return newUSer;
+    return new LengthRecommenderUser(*this);
 }
-
 
 //RerunRecommenderUser functions
 RerunRecommenderUser::RerunRecommenderUser(const std::string &name): User(name),indexOfLastRecommendation() {
@@ -132,19 +130,14 @@ Watchable* RerunRecommenderUser::getRecommendation(Session &s) {
     if (getHistorySize()==0){
         return nullptr;
     } //history is empty, nothing to offer
-    if (indexOfLastRecommendation==-1){
-        indexOfLastRecommendation=0;
-        return this->history[indexOfLastRecommendation];
-    }
-    return this->history[(indexOfLastRecommendation+1)%getHistorySize()];
+    indexOfLastRecommendation++;
+    return this->history[(indexOfLastRecommendation) % getHistorySize()];
 }
-
-
 
 User *RerunRecommenderUser::clone() const {
-    RerunRecommenderUser *newUser = new RerunRecommenderUser(*this);
-    return newUser;
+    return new RerunRecommenderUser(*this);
 }
+
 bool sortbyTag(const pair<string,int> &a,
                const pair<string,int> &b)
 {
@@ -203,7 +196,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
             if(!found) {
                 bool flag = false;
                 for (auto &j : this->history) {
-                    if (i == j) {
+                    if (i->getId()==j->getId()) {
                         flag = true;
                         break;
                     } //flag = true -> he already watched the one we want to recommend
@@ -237,8 +230,7 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
 
 
 User *GenreRecommenderUser::clone() const {
-    GenreRecommenderUser *newUser=new GenreRecommenderUser(*this);
-    return newUser;
+    return new GenreRecommenderUser(*this);
 }
 
 

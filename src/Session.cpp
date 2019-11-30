@@ -43,7 +43,6 @@ Session::Session(const std::string &configFilePath) : content(),actionsLog(),use
 
 void Session::start() {
     std::cout<< "SPLFLIX is now on!";
-    arrangePointers();
     continueToRun=true;
     while (continueToRun){
         cout<<""<<endl;// get down a line each time
