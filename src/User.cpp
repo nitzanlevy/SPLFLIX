@@ -7,9 +7,6 @@ using namespace std;
 //
 // Created by amit on 18/11/2019.
 //
-/*std::vector<Watchable*> User::get_history() const {
-    return this->history;
-}*/
 
 User::User(std::string name) : history(),name(std::move(name)) {}
 
@@ -206,10 +203,6 @@ Watchable* GenreRecommenderUser::getRecommendation(Session &s) {
         }
         //if not matching for mostTag we search for the nextTag by deleting the mostTag from elems
         if(!found) {
-            /*for(auto it = elems.begin(); it!=elems.end(); it++ )
-                if(it->first == mostTag) //added .base()!!
-                    elems.erase(it);
-            maxTag=0;*/
             for(auto &k :elems){
                 if (k.first==mostTag){
                     k.second=-2; //setting k out of reach

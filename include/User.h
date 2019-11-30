@@ -18,7 +18,6 @@ public:
     User&operator=(const User&); //Copy assignment operator
     virtual Watchable* getRecommendation(Session& s) = 0;
     std::string getName() const;
-    //std::vector<Watchable*> get_history() const;
     int getHistorySize(); //added
     std::vector<Watchable*>& getHistory();
     User (User &&); //move assignment constructor
