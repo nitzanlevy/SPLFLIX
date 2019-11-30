@@ -43,7 +43,7 @@ Session::Session(const std::string &configFilePath) : content(),actionsLog(),use
 
 void Session::start() {
     std::cout<< "SPLFLIX is now on!";
-    //arrangePointers();
+    continueToRun=true;
     while (continueToRun){
         cout<<""<<endl;// get down a line each time
         string command;
@@ -138,13 +138,6 @@ void Session::start() {
                 else
                     cout << "Invalid input, try again";
             }
-        }
-        if (!continueToRun){
-            cout<<"rerun? [y/n]"<<endl;
-            string rerun;
-            getline(cin,rerun);
-            if (rerun=="y")
-                continueToRun= true;
         }
     }
 }
