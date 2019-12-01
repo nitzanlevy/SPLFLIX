@@ -21,6 +21,7 @@ void BaseAction ::complete() {
 void BaseAction::error(const std::string &errorMsg) {
     this->status=ERROR;
     this->errorMsg=errorMsg;
+    std::cout<<this->errorMsg; //let the user know when error occurs.
 }
 
 std::string BaseAction::getErrorMsg() const {
@@ -83,7 +84,7 @@ void CreateUser::act(Session &sess) {
                 this->error("name or code is missing");
         }
         else
-            this->error("The user name is already exist");
+            this->error("username already exists");
     }
     else
         this->error("name or code is missing");
@@ -146,7 +147,7 @@ void ChangeActiveUser::act(Session &sess) {
         sess.setNewActiveUser(sess.getUser(action));
         this->complete();
     } else{
-        error("User not exists");
+        error("User does not exist");
     }
 }
 
@@ -167,7 +168,7 @@ void DeleteUser::act(Session &sess) {
         sess.deleteUser(action);
         this->complete();
     } else{
-        error("User not exists");
+        error("User does not exist");
     }
 }
 
@@ -195,9 +196,9 @@ void DuplicateUser::act(Session &sess) {
             sess.addUser(newUser->getName(),newUser);
             this->complete();
         } else {
-            error("User not exists");
+            error("User does not exist");
         }
-    } else error("unvalid Input");
+    } else error("invalid Input");
 
 }
 std::string DuplicateUser::toString() const {
