@@ -59,6 +59,8 @@ User::User(User && other) : history(),name() { //move constructor
 }
 
 User &User::operator=(User &&other) { //move assignment operator
+    if (this==&other)
+        return *this;
     for (auto &i:this->history) { // clean previous values
         delete i;
     }

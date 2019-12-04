@@ -256,7 +256,8 @@ bool Session::isNumber(const string& str)
 }
 
 Session &Session::operator=(Session && other) { //move assignment operator
-
+    if(this==&other)
+        return *this;
     for(auto &i:this->actionsLog){ //destroy old lists
         delete i;
     }
