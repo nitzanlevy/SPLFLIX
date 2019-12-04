@@ -219,7 +219,7 @@ void PrintContentList::act(Session &sess) {
     this->complete();
 }
 std::string PrintContentList::toString() const {
-    return "Print Content List: " + getStatusString()+" "+ this->getErrorMsg()+",";
+    return "Print Content List: " + getStatusString()+" "+ this->getErrorMsg();
 }
 
 BaseAction *PrintContentList::clone() const {
@@ -231,8 +231,10 @@ BaseAction *PrintContentList::clone() const {
 void PrintWatchHistory::act(Session &sess) {
     sess.addAction(this);
     std::cout<< "Watch history for:"+sess.getActiveUser()->getName() <<std::endl;
+    int counter=1;
     for(auto & i : sess.getActiveUser()->getHistory()) {
-        std::cout << i->toString() +"\n";
+        std::cout <<std::to_string(counter)+". "+ i->toString() +"\n";
+        i=i+1;
     }
     this->complete();
 }

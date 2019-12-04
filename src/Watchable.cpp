@@ -39,7 +39,7 @@ std::string Movie::toString() const {
     for(int i=0;(unsigned)i<this->getTags().size();i++)
         s=s+this->getTags().at(i)+", ";
     s=s.substr(0,s.length()-2);
-    return std::to_string(this->getId()) + ". "+ name +" "+ std::to_string(this->getLength()) +" minutes ["+s+"]" ;
+    return name +" "+ std::to_string(this->getLength()) +" minutes ["+s+"]" ;
 }
 
 Watchable *Movie::clone() const {
@@ -77,7 +77,7 @@ std::string Episode::toString() const {
     for(int i=0; (unsigned)i<this->getTags().size();i++)
         s=s+this->getTags().at(i)+", ";
     s=s.substr(0,s.length()-2);
-    return std::to_string(this->getId()) + ". " + seriesName + " S" + std::to_string(this->season)+ "E" + std::to_string(this->episode) +" "+ std::to_string(this->getLength()) + " minutes ["+s+"]" ;
+    return seriesName + " S" + std::to_string(this->season)+ "E" + std::to_string(this->episode) +" "+ std::to_string(this->getLength()) + " minutes ["+s+"]" ;
 }
 
 Watchable* Episode::getNextEpisode(Session &session) const {
